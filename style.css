@@ -25,7 +25,7 @@ thead {
 }
 
 thead.dark {
-  background-color: #A1ACB3;
+  background-color: #808080;
 }
 
 tbody {
@@ -33,5 +33,5 @@ tbody {
 }
 
 tbody.dark {
-  background-color: #808080;
+  background-color: #A1ACB3;
 }
