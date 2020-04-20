@@ -1,0 +1,37 @@
+body.dark {
+  background-color: black;
+  color: white;
+}
+
+nav {
+  margin-bottom: 8px;
+}
+
+table {
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+table.dark, th.dark, td.dark {
+  border: 1px solid white;
+  color: black;
+}
+
+thead {
+  background-color: #E6FFFB;
+}
+
+thead.dark {
+  background-color: #A1ACB3;
+}
+
+tbody {
+  background-color: #EEFFE6;
+}
+
+tbody.dark {
+  background-color: #808080;
+}
