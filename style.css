@@ -11,27 +11,22 @@ table {
   text-align: center;
 }
 
-table, th, td {
-  border: 1px solid black;
-}
-
-table.dark, th.dark, td.dark {
-  border: 1px solid white;
-  color: black;
-}
-
-thead {
-  background-color: #E6FFFB;
-}
-
-thead.dark {
-  background-color: #808080;
-}
-
-tbody {
+tr > td {
   background-color: #EEFFE6;
 }
 
-tbody.dark {
+tr > th {
+  background-color: #E6FFFB;
+}
+
+table.dark {
+  color: black;
+}
+
+table.dark td {
   background-color: #A1ACB3;
+}
+
+table.dark th {
+  background-color: #808080;
 }
