@@ -1,14 +1,31 @@
-body.dark {
+.dark {
   background-color: black;
   color: white;
+}
+
+.dark table {
+  color: black;
+}
+
+.dark td {
+  background-color: #A1ACB3;
+}
+
+.dark th {
+  background-color: #808080;
 }
 
 nav {
   margin-bottom: 8px;
 }
 
-table {
+td {
   text-align: center;
+}
+
+/* TODO: apply fixed width to column 2 */
+tr:second-child {
+  width: 20%;
 }
 
 tr > td {
@@ -17,16 +34,4 @@ tr > td {
 
 tr > th {
   background-color: #E6FFFB;
-}
-
-table.dark {
-  color: black;
-}
-
-table.dark td {
-  background-color: #A1ACB3;
-}
-
-table.dark th {
-  background-color: #808080;
 }
