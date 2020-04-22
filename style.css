@@ -19,19 +19,19 @@ nav {
   margin-bottom: 8px;
 }
 
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
 td {
   text-align: center;
-}
-
-/* TODO: apply fixed width to column 2 */
-tr:second-child {
-  width: 20%;
-}
-
-tr > td {
   background-color: #EEFFE6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-tr > th {
+th {
   background-color: #E6FFFB;
 }
