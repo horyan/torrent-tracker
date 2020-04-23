@@ -1,18 +1,18 @@
+body {
+  font-family: Calibri,Candara,Segoe,"Segoe UI",Optima,Arial,sans-serif;  
+}
+
 .dark {
   background-color: black;
   color: white;
 }
 
-.dark table {
-  color: black;
-}
-
 .dark td {
-  background-color: #A1ACB3;
+  background-color: #808080;
 }
 
 .dark th {
-  background-color: #808080;
+  background-color: #A1ACB3;
 }
 
 nav {
@@ -22,6 +22,10 @@ nav {
 table {
   table-layout: fixed;
   width: 100%;
+}
+
+th,td {
+  padding: .3rem;
 }
 
 td {
