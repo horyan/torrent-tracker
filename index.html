@@ -3,7 +3,9 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torrent Tracker</title>
-    <link href="style.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <script src="js/script.js"></script>
+
   </head>
   <body>
     <header>
@@ -22,7 +24,7 @@
             <th scope="col">Leechers</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="torrent-table">
           <tr>
             <td>[Alex] Boku no Hero Academia Season 3 - Episodes 01-07 [Blueray Dual-Audio 1080p x265]</td>
             <td>magnet:?xt=urn:btih:3a73bad9f215ea19eb4d5e2dbc143e33ca4536ad&dn=%5BAlex%5D%20Boku%20no%20Hero%20Academia%20Season%203%20-%20Episodes%2001-07%20%5BBluray%20Dual-Audio%201080p%20x265%5D&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce</td>
@@ -44,11 +46,21 @@
             <td>1</td>
             <td>0</td>
           </tr>
+          <tr>
+            <td>[Alex] Boku no Hero Academia Season 3 - Episodes 01-07 [Blueray Dual-Audio 1080p x265]</td>
+            <td>magnet:?xt=urn:btih:3a73bad9f215ea19eb4d5e2dbc143e33ca4536ad&dn=%5BAlex%5D%20Boku%20no%20Hero%20Academia%20Season%203%20-%20Episodes%2001-07%20%5BBluray%20Dual-Audio%201080p%20x265%5D&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce</td>
+            <td>3.6 GiB</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
         </tbody>
       </table>
     </main>
     <footer>
       <p>Table ver. 1.0: data is manually copied from <a href="https://nyaa.si/?f=0&c=0_0&q=boku+no+hero" target="_blank" rel="noreferrer noopener">Nyaa</a></p>
+    
+      <button onclick="addNewRow()">Add New Row</button>
+      
     </footer>
   </body>
 </html>
