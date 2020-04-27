@@ -1,18 +1,19 @@
 body {
-  font-family: Calibri,Candara,Segoe,"Segoe UI",Optima,Arial,sans-serif;  
+  font-family: Muli, Arial, sans-serif;
+  background-color: #FAF4FF;
 }
 
 .dark {
-  background-color: black;
-  color: white;
+  background-color: #000;
+  color: #FFF;
 }
 
 .dark td {
-  background-color: #919191;
+  background-color: #313131;
 }
 
 .dark th {
-  background-color: #686868;
+  background-color: #181818;
 }
 
 nav {
@@ -24,18 +25,18 @@ table {
   width: 100%;
 }
 
-th,td {
+th, td {
   padding: .3rem;
 }
 
 td {
   text-align: center;
-  background-color: #EEFFE6;
+  background-color: #D4EBD0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 th {
-  background-color: #E6FFFB;
+  background-color: #A4C5C6;
 }
