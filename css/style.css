@@ -40,3 +40,7 @@ td {
 th {
   background-color: #A4C5C6;
 }
+
+label {
+  display: flex;
+}
