@@ -1,12 +1,13 @@
 function addRow() {
-  let name, uri, size, seeders, leechers;
+  let name, uri, size, seeders, leechers, options;
   const form = document.forms["torrent-form"];
-  const nameList = [name, uri, size, seeders, leechers]; 
+  const nameList = [name, uri, size, seeders, leechers, options]; 
   const valueList = [form["name"].value,
                     form["uri"].value,
                     form["size"].value,
                     form["seeders"].value,
-                    form["leechers"].value];
+                    form["leechers"].value,
+                    '<button>Edit</button><button>Delete</button>'];
 
   const tbody = document.getElementById("torrent-tbody");
   const newRow = document.createElement("tr");
