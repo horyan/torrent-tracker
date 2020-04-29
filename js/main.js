@@ -18,6 +18,11 @@ function addRow() {
     newRow.appendChild(nameList[i]);
   }
   tbody.appendChild(newRow);
+  // clear input fields after row is added
+  const inputList = ["name", "uri", "size", "seeders", "leechers"];
+  for (let i = 0; i <inputList.length; i++) {
+    form[inputList[i]].value = "";
+  }
 }
 
 function toggleTheme() {

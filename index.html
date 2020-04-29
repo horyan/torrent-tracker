@@ -13,43 +13,29 @@
       </nav>
     </header>
     <main>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Name<button>&and;</button><button>&or;</button></th>
-            <th scope="col">URI<button>&and;</button><button>&or;</button></th>
-            <th scope="col">Size<button>&and;</button><button>&or;</button></th>
-            <th scope="col">Seeders<button>&and;</button><button>&or;</button></th>
-            <th scope="col">Leechers<button>&and;</button><button>&or;</button></th>
-            <th scope="col">Options</th>
-          </tr>
-        </thead>
-        <tbody id="torrent-tbody">
-        </tbody>
-      </table>
       <form id="torrent-form" onsubmit="addRow(); return false;">
-        <h3>Submit Torrent Info</h2>
-        <div>
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" placeholder="Enter Name..." required>
-        </div>
-        <div>
-          <label for="uri">URI:</label>
-          <input type="text" id="uri" name="uri" placeholder="Enter URI..." required>
-        </div>
-        <div>
-          <label for="size">Size:</label>
-          <input type="text" id="size" name="size" placeholder="Enter Size..." required>
-        </div>
-        <div>
-          <label for="seeders">Seeders:</label>
-          <input type="text" id="seeders" name="seeders" placeholder="Enter Seeders..." required>
-        </div>
-        <div>
-          <label for="leechers">Leechers:</label>
-          <input type="text" id="leechers" name="leechers" placeholder="Enter Leechers..." required>
-        </div>
-        <input type="submit" value="Add">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"><label for="name">Name</label><button>&and;</button><button>&or;</button></th>
+              <th scope="col"><label for="uri">URI</label><button>&and;</button><button>&or;</button></th>
+              <th scope="col"><label for="size">Size</label><button>&and;</button><button>&or;</button></th>
+              <th scope="col"><label for="seeders">Seeders</label><button>&and;</button><button>&or;</button></th>
+              <th scope="col"><label for="leechers">Leechers</label><button>&and;</button><button>&or;</button></th>
+              <th scope="col">Options</th>
+            </tr>
+          </thead>
+          <tbody id="torrent-tbody">
+            <tr>
+              <td><input id="name" name="name" required></td>
+              <td><input id="uri" name="uri" required></td>
+              <td><input id="size" name="size" required></td>
+              <td><input id="seeders" name="seeders" required></td>
+              <td><input id="leechers" name="leechers" required></td>
+              <td><input type="submit" value="Add"><button>Cancel</button></td>
+            </tr>
+          </tbody>
+        </table>
       </form>
     </main>
     <footer>
