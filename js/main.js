@@ -1,27 +1,28 @@
 function addRow() {
   let name, uri, size, seeders, leechers, options;
-  const form = document.forms["torrent-form"];
-  const nameList = [name, uri, size, seeders, leechers, options]; 
-  const valueList = [form["name"].value,
-                    form["uri"].value,
-                    form["size"].value,
-                    form["seeders"].value,
-                    form["leechers"].value,
-                    '<button>Edit</button><button>Delete</button>'];
+  const newCellElements = [name, uri, size, seeders, leechers, options]; 
 
-  const tbody = document.getElementById("torrent-tbody");
+  const torrentForm = document.forms["torrent-form"];
+  const newCellValues = [torrentForm["name"].value,
+                        torrentForm["uri"].value,
+                        torrentForm["size"].value,
+                        torrentForm["seeders"].value,
+                        torrentForm["leechers"].value,
+                        '<button>Edit</button><button>Delete</button>'];
+
   const newRow = document.createElement("tr");
-
-  for (let i = 0; i < nameList.length; i++) {
-    nameList[i] = document.createElement("td");
-    nameList[i].innerHTML = valueList[i]; 
-    newRow.appendChild(nameList[i]);
+  for (let i = 0; i < newCellElements.length; i++) {
+    newCellElements[i] = document.createElement("td");
+    newCellElements[i].innerHTML = newCellValues[i]; 
+    newRow.appendChild(newCellElements[i]);
   }
-  tbody.appendChild(newRow);
-  // clear input fields after row is added
-  const inputList = ["name", "uri", "size", "seeders", "leechers"];
-  for (let i = 0; i <inputList.length; i++) {
-    form[inputList[i]].value = "";
+  const inputRow = document.getElementById("input-row");
+  inputRow.parentNode.insertBefore(newRow, inputRow);
+
+  // clear input fields each time a new row is added
+  const inputNames = ["name", "uri", "size", "seeders", "leechers"];
+  for (let i = 0; i < inputNames.length; i++) {
+    torrentForm[inputNames[i]].value = "";
   }
 }
 
