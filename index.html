@@ -30,8 +30,8 @@
               <td><input id="name" name="name" required></td>
               <td><input id="uri" name="uri" required></td>
               <td><input id="size" name="size" required></td>
-              <td><input id="seeders" name="seeders" required></td>
-              <td><input id="leechers" name="leechers" required></td>
+              <td><input id="seeders" name="seeders" pattern="[1-9]\d*|0" required></td>
+              <td><input id="leechers" name="leechers" pattern="[1-9]\d*|0" required></td>
               <td><button type="button" onclick="inputReset()">Cancel</button><button type="submit">Add</button></td>
             </tr>
           </tbody>
