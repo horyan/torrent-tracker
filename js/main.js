@@ -1,3 +1,5 @@
+// form submission
+document.getElementById("torrent-form").onsubmit = function() {addRow(); return false;};
 function addRow() {
   let name, uri, size, seeders, leechers, options;
   const newCellElements = [name, uri, size, seeders, leechers, options]; 
@@ -8,7 +10,7 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button>Edit</button><button>Delete</button>'];
+                        '<button id="btn-edit" type="button">Edit</button><button type="button">Delete</button>'];
 
   const newRow = document.createElement("tr");
   for (let i = 0; i < newCellElements.length; i++) {
@@ -17,86 +19,59 @@ function addRow() {
     newRow.appendChild(newCellElements[i]);
   }
   const inputRow = document.getElementById("input-row");
-  inputRow.parentNode.insertBefore(newRow, inputRow);
+  inputRow.parentNode.insertBefore(newRow, inputRow); // add new row before input row
 
   // clear input fields each time a new row is added
-  // TODO: change invalidation styling
+  // TODO: only invalidate user input/submission error
   const inputNames = ["name", "uri", "size", "seeders", "leechers"];
   for (let i = 0; i < inputNames.length; i++) {
     torrentForm[inputNames[i]].value = "";
   }
 }
 
-function inputReset() {
-  // clear non-empty input fields
-  // TODO: change invalidation styling
+// clear non-empty input fields
+// TODO: only invalidate user input/submission error
+document.getElementById("btn-cancel").onclick = function() {
   const inputNames = ["name", "uri", "size", "seeders", "leechers"];
-  torrentForm = document.forms["torrent-form"];
+  const torrentForm = document.forms["torrent-form"];
   for (let i = 0; i < inputNames.length; i++) {
     if (torrentForm[inputNames[i]].value != "")
       torrentForm[inputNames[i]].value = "";
   }
-}
+};
 
-function toggleTheme() {
-  const theme = document.getElementById("btn-theme");
+// toggle dark/light theme
+document.getElementById("btn-theme").onclick = function() {
   if (document.body.classList.toggle("dark") === true) {
-    theme.innerHTML = "Light Mode";
+    this.innerHTML = "Light Mode";
   }
   else {
-    theme.innerHTML = "Dark Mode";
+    this.innerHTML = "Dark Mode";
+  }
+};
+
+// caret cycle and sorting
+// TODO: add asc/desc sort functionality
+document.getElementById("btn-name").onclick = function() {toggleSort(this)};
+document.getElementById("btn-uri").onclick = function() {toggleSort(this)};
+document.getElementById("btn-size").onclick = function() {toggleSort(this)};
+document.getElementById("btn-seeders").onclick = function() {toggleSort(this)};
+document.getElementById("btn-leechers").onclick = function() {toggleSort(this)};
+
+function toggleSort(e) {
+  if (e.innerHTML === "▷") {
+    e.innerHTML = "&#9651";
+  } else if (e.innerHTML === "△") {
+    e.innerHTML = "&#9661";
+  } else {
+    e.innerHTML = "&#9655";
   }
 }
 
-// TODO: avoid repitition; combine into a single function
-// TODO: add asc/desc sort functionality
-function toggleNameSort() {
-  const sortButton = document.getElementById("btn-name");
-  if (sortButton.innerHTML === "▷") {
-    sortButton.innerHTML = "&#9651";
-  } else if (sortButton.innerHTML === "△") {
-    sortButton.innerHTML = "&#9661";
-  } else {
-    sortButton.innerHTML = "&#9655";
-  }
-}
-function toggleUriSort() {
-  const sortButton = document.getElementById("btn-uri");
-  if (sortButton.innerHTML === "▷") {
-    sortButton.innerHTML = "&#9651";
-  } else if (sortButton.innerHTML === "△") {
-    sortButton.innerHTML = "&#9661";
-  } else {
-    sortButton.innerHTML = "&#9655";
-  }
-}
-function toggleSizeSort() {
-  const sortButton = document.getElementById("btn-size");
-  if (sortButton.innerHTML === "▷") {
-    sortButton.innerHTML = "&#9651";
-  } else if (sortButton.innerHTML === "△") {
-    sortButton.innerHTML = "&#9661";
-  } else {
-    sortButton.innerHTML = "&#9655";
-  }
-}
-function toggleSeedersSort() {
-  const sortButton = document.getElementById("btn-seeders");
-  if (sortButton.innerHTML === "▷") {
-    sortButton.innerHTML = "&#9651";
-  } else if (sortButton.innerHTML === "△") {
-    sortButton.innerHTML = "&#9661";
-  } else {
-    sortButton.innerHTML = "&#9655";
-  }
-}
-function toggleLeechersSort() {
-  const sortButton = document.getElementById("btn-leechers");
-  if (sortButton.innerHTML === "▷") {
-    sortButton.innerHTML = "&#9651";
-  } else if (sortButton.innerHTML === "△") {
-    sortButton.innerHTML = "&#9661";
-  } else {
-    sortButton.innerHTML = "&#9655";
-  }
-}
+// testing hover function before applying to an addRow() element
+document.getElementById("btn-cancel").onmouseover = function() {
+  this.innerHTML = "CLEAR";
+};
+document.getElementById("btn-cancel").onmouseout = function() {
+  this.innerHTML = "Clear";
+};

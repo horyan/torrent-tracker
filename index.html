@@ -9,18 +9,18 @@
   <body>
     <header>
       <nav>
-        <button id="btn-theme" onclick="toggleTheme()">Dark Mode</button>
+        <button id="btn-theme">Dark Mode</button>
       </nav>
     </header>
     <main>
-      <form id="torrent-form" onsubmit="addRow(); return false;">
+      <form id="torrent-form">
         <table>
           <thead>
             <tr>
-              <th scope="col"><label for="name">Name</label><button type="button" id="btn-name" onclick="toggleNameSort()">&#9655</button></th>
-              <th scope="col"><label for="uri">URI</label><button type="button" id="btn-uri" onclick="toggleUriSort()">&#9655</button></th>
-              <th scope="col"><label for="size">Size</label><button type="button" id="btn-size" onclick="toggleSizeSort()">&#9655</button></th>
-              <th scope="col"><label for="seeders">Seeders</label><button type="button" id="btn-seeders" onclick="toggleSeedersSort()">&#9655</th>
+              <th scope="col"><label for="name">Name</label><button type="button" id="btn-name">&#9655</button></th>
+              <th scope="col"><label for="uri">URI</label><button type="button" id="btn-uri">&#9655</button></th>
+              <th scope="col"><label for="size">Size</label><button type="button" id="btn-size">&#9655</button></th>
+              <th scope="col"><label for="seeders">Seeders</label><button type="button" id="btn-seeders">&#9655</th>
               <th scope="col"><label for="leechers">Leechers</label><button type="button" id="btn-leechers" onclick="toggleLeechersSort()">&#9655</button></th>
               <th scope="col">Options</th>
             </tr>
@@ -32,7 +32,7 @@
               <td><input id="size" name="size" required></td>
               <td><input id="seeders" name="seeders" pattern="[1-9]\d*|0" required></td>
               <td><input id="leechers" name="leechers" pattern="[1-9]\d*|0" required></td>
-              <td><button type="button" onclick="inputReset()">Cancel</button><button type="submit">Add</button></td>
+              <td><button type="button" id="btn-cancel">Clear</button><button type="submit">Add</button></td>
             </tr>
           </tbody>
         </table>
