@@ -1,4 +1,4 @@
-// form submission
+// add user input into table
 document.getElementById("torrent-form").onsubmit = function() {addRow(); return false;};
 function addRow() {
   let name, uri, size, seeders, leechers, options;
@@ -10,27 +10,29 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button id="btn-edit" type="button">Edit</button><button type="button">Delete</button>'];
+                        '<button id="btn-edit" type="button">Edit</button><button id="btn-delete" type="button">Delete</button>'];
 
   const trElement = document.createElement("tr");
+  const trAttribute = document.createAttribute("class");
+  trAttribute.value = "user-row";
+  trElement.setAttributeNode(trAttribute);
   for (let i = 0; i < tdElements.length; i++) {
     tdElements[i] = document.createElement("td");
     tdElements[i].innerHTML = tdElementContents[i]; 
     trElement.appendChild(tdElements[i]);
   }
   const torrentRow = document.getElementById("torrent-row");
-  torrentRow.parentNode.insertBefore(trElement, torrentRow); // add new row before input row
+  torrentRow.parentNode.insertBefore(trElement, torrentRow); // insert row before inputs
 
-  // clear input fields each time a new row is added
-  // TODO: only invalidate user input/submission error
+  // clear inputs after adding row (TODO: hide invalidation, preserve detection on user input/submit)
   const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
   for (let i = 0; i < torrentNames.length; i++) {
     torrentForm[torrentNames[i]].value = "";
   }
 }
+// TODO: remove row node on btn-delete onclick event
 
-// clear non-empty input fields
-// TODO: only invalidate user input/submission error
+// clear non-empty inputs (TODO: hide invalidation, preserve detection on user input/submit)
 document.getElementById("btn-cancel").onclick = function() {
   const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
   const torrentForm = document.forms["torrent-form"];
@@ -40,13 +42,12 @@ document.getElementById("btn-cancel").onclick = function() {
   }
 };
 
-// toggle dark/light theme
+// toggle color scheme (TODO: switch between 2 image indicators)
 document.getElementById("btn-theme").onclick = function() {
   document.body.classList.toggle("dark") === true ? this.innerHTML = "Light Mode" : this.innerHTML = "Dark Mode";
 }
 
-// caret cycle and sorting
-// TODO: add asc/desc sort functionality
+// column sort indicator (TODO: add asc/desc logic)
 document.getElementById("btn-name").onclick = function() {toggleSort(this)};
 document.getElementById("btn-uri").onclick = function() {toggleSort(this)};
 document.getElementById("btn-size").onclick = function() {toggleSort(this)};
@@ -63,7 +64,7 @@ function toggleSort(e) {
   }
 }
 
-// testing hover function before applying to an addRow() element
+// test hover before applying to addRow() spawn
 document.getElementById("btn-cancel").onmouseover = function() {
   this.innerHTML = "CLEAR";
 };

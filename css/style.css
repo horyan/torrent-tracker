@@ -1,6 +1,13 @@
 input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid black;
+  background-color: #FAF4FF;
+}
+input:focus {
+  border: none;
   background-color: #D4EBD0;
-  border: 0;
 }
 .dark input {
   background-color: #313131;
@@ -49,15 +56,19 @@ table {
 th, td {
   padding: .3rem;
 }
-
 td {
   text-align: center;
+  background-color: #FAF4FF; 
+}
+.user-row td {
   background-color: #D4EBD0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+td:focus-within:not(:last-child) {
+  background-color: #D4EBD0;
+}
 th {
   background-color: #A4C5C6;
 }
