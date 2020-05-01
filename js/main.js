@@ -35,7 +35,7 @@ function addRow() {
 // TODO: how to separate from HTML and manipulate unrendered btn-delete element?
 function deleteRow(e) {
   const userRow = e.parentElement.parentElement;
-  userRow.parentNode.removeChild(userRow);
+  userRow.remove(userRow);
 }
 
 // clear non-empty inputs (TODO: hide invalidation, preserve detection on user input/submit)
