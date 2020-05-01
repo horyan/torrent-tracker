@@ -10,7 +10,7 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button id="btn-edit" type="button">Edit</button><button id="btn-delete" type="button">Delete</button>'];
+                        '<button id="btn-edit" type="button">Edit</button><button id="btn-delete" type="button" onclick="deleteRow(this)">Delete</button>'];
 
   const trElement = document.createElement("tr");
   const trAttribute = document.createAttribute("class");
@@ -30,7 +30,13 @@ function addRow() {
     torrentForm[torrentNames[i]].value = "";
   }
 }
-// TODO: remove row node on btn-delete onclick event
+
+// button element with btn-delete id should remove its ancestor row on user click
+// TODO: how to separate from HTML and manipulate unrendered btn-delete element?
+function deleteRow(e) {
+  const userRow = e.parentElement.parentElement;
+  userRow.parentNode.removeChild(userRow);
+}
 
 // clear non-empty inputs (TODO: hide invalidation, preserve detection on user input/submit)
 document.getElementById("btn-cancel").onclick = function() {
@@ -42,7 +48,7 @@ document.getElementById("btn-cancel").onclick = function() {
   }
 };
 
-// toggle color scheme (TODO: switch between 2 image indicators)
+// toggle color theme (TODO: switch between 2 image indicators)
 document.getElementById("btn-theme").onclick = function() {
   document.body.classList.toggle("dark") === true ? this.innerHTML = "Light Mode" : this.innerHTML = "Dark Mode";
 }
