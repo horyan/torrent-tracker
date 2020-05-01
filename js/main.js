@@ -2,53 +2,48 @@
 document.getElementById("torrent-form").onsubmit = function() {addRow(); return false;};
 function addRow() {
   let name, uri, size, seeders, leechers, options;
-  const newCellElements = [name, uri, size, seeders, leechers, options]; 
+  const tdElements = [name, uri, size, seeders, leechers, options]; 
 
   const torrentForm = document.forms["torrent-form"];
-  const newCellValues = [torrentForm["name"].value,
+  const tdElementContents = [torrentForm["name"].value,
                         torrentForm["uri"].value,
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
                         '<button id="btn-edit" type="button">Edit</button><button type="button">Delete</button>'];
 
-  const newRow = document.createElement("tr");
-  for (let i = 0; i < newCellElements.length; i++) {
-    newCellElements[i] = document.createElement("td");
-    newCellElements[i].innerHTML = newCellValues[i]; 
-    newRow.appendChild(newCellElements[i]);
+  const trElement = document.createElement("tr");
+  for (let i = 0; i < tdElements.length; i++) {
+    tdElements[i] = document.createElement("td");
+    tdElements[i].innerHTML = tdElementContents[i]; 
+    trElement.appendChild(tdElements[i]);
   }
-  const inputRow = document.getElementById("input-row");
-  inputRow.parentNode.insertBefore(newRow, inputRow); // add new row before input row
+  const torrentRow = document.getElementById("torrent-row");
+  torrentRow.parentNode.insertBefore(trElement, torrentRow); // add new row before input row
 
   // clear input fields each time a new row is added
   // TODO: only invalidate user input/submission error
-  const inputNames = ["name", "uri", "size", "seeders", "leechers"];
-  for (let i = 0; i < inputNames.length; i++) {
-    torrentForm[inputNames[i]].value = "";
+  const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
+  for (let i = 0; i < torrentNames.length; i++) {
+    torrentForm[torrentNames[i]].value = "";
   }
 }
 
 // clear non-empty input fields
 // TODO: only invalidate user input/submission error
 document.getElementById("btn-cancel").onclick = function() {
-  const inputNames = ["name", "uri", "size", "seeders", "leechers"];
+  const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
   const torrentForm = document.forms["torrent-form"];
-  for (let i = 0; i < inputNames.length; i++) {
-    if (torrentForm[inputNames[i]].value != "")
-      torrentForm[inputNames[i]].value = "";
+  for (let i = 0; i < torrentNames.length; i++) {
+    if (torrentForm[torrentNames[i]].value != "")
+      torrentForm[torrentNames[i]].value = "";
   }
 };
 
 // toggle dark/light theme
 document.getElementById("btn-theme").onclick = function() {
-  if (document.body.classList.toggle("dark") === true) {
-    this.innerHTML = "Light Mode";
-  }
-  else {
-    this.innerHTML = "Dark Mode";
-  }
-};
+  document.body.classList.toggle("dark") === true ? this.innerHTML = "Light Mode" : this.innerHTML = "Dark Mode";
+}
 
 // caret cycle and sorting
 // TODO: add asc/desc sort functionality

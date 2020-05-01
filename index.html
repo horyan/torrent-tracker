@@ -11,6 +11,7 @@
       <nav>
         <button id="btn-theme">Dark Mode</button>
       </nav>
+      <h1>Torrent Tracker</h1>
     </header>
     <main>
       <form id="torrent-form">
@@ -26,12 +27,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr id="input-row">
-              <td><input id="name" name="name" required></td>
-              <td><input id="uri" name="uri" required></td>
-              <td><input id="size" name="size" required></td>
-              <td><input id="seeders" name="seeders" pattern="[1-9]\d*|0" required></td>
-              <td><input id="leechers" name="leechers" pattern="[1-9]\d*|0" required></td>
+            <tr id="torrent-row">
+              <td><input id="name" name="name" placeholder="Enter Name..." required></td>
+              <td><input id="uri" name="uri" placeholder="Enter Name..." required></td>
+              <td><input id="size" name="size" placeholder="Enter Size..." required></td>
+              <td><input id="seeders" name="seeders" placeholder="Enter Seeders..." pattern="[1-9]\d*|0" required></td>
+              <td><input id="leechers" name="leechers" placeholder="Enter Leechers..." pattern="[1-9]\d*|0" required></td>
               <td><button type="button" id="btn-cancel">Clear</button><button type="submit">Add</button></td>
             </tr>
           </tbody>

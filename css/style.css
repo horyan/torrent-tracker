@@ -1,6 +1,27 @@
+input {
+  background-color: #D4EBD0;
+  border: 0;
+}
+.dark input {
+  background-color: #313131;
+}
+th > button {
+  background-color: #A4C5C6;
+}
+.dark th > button {
+  background-color: #181818;
+  color: #FFF;
+}
+h1 {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+/* experimental above */
 body {
   font-family: Muli, Arial, sans-serif;
   background-color: #FAF4FF;
+  margin: 0;
 }
 
 .dark {
@@ -42,7 +63,8 @@ th {
 }
 
 button {
-  padding: 0 .3rem;
+  border-radius: .375rem;
+  padding: .5 1rem;
   border: 0;
-  margin-left: .5rem;
+  /* TODO: space out clear/add */
 }
