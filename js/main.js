@@ -1,3 +1,16 @@
+// make testing easier
+document.getElementById("add5").onclick = function() {
+  const temp = document.forms[0];
+  for (let i = 0; i < 5; i++) {
+    temp["name"].value="1";
+    temp["uri"].value="1";
+    temp["size"].value="1";
+    temp["seeders"].value="1";
+    temp["leechers"].value="1";
+    addRow();
+  }
+};
+
 // add user input into table
 document.getElementById("torrent-form").onsubmit = function() {addRow(); return false;};
 function addRow() {
