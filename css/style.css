@@ -78,7 +78,7 @@ th {
 
 button {
   border-radius: .375rem;
-  padding: .5 1rem;
+  padding: 0 .5rem;
   border: 0;
-  /* TODO: space out clear/add */
+  /* TODO: more selectors to target varying padding and margin */
 }

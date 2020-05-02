@@ -10,7 +10,7 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button id="btn-edit" type="button" onmouseover="revealOptions(this)" onmouseout="revertOptions(this)">Edit</button><button id="btn-delete" type="button" onclick="deleteRow(this)">Delete</button>'];
+                        '<button type="button" onclick="editRow(this)" onmouseover="revealOptions(this)">Edit</button><button type="button" onclick="deleteRow(this)">Delete</button>'];
 
   const trElement = document.createElement("tr");
   const trClass = document.createAttribute("class");
@@ -21,8 +21,13 @@ function addRow() {
     tdElements[i].innerHTML = tdElementContents[i]; 
     trElement.appendChild(tdElements[i]);
   }
+  // add onmouseover attribute to last td since no id for selecting
+  const tdEventOver = document.createAttribute("onmouseover");
+  tdEventOver.value = "revertOptions(this)";
+  tdElements[5].setAttributeNode(tdEventOver);
+  // insert row before inputs
   const torrentRow = document.getElementById("torrent-row");
-  torrentRow.parentNode.insertBefore(trElement, torrentRow); // insert row before inputs
+  torrentRow.parentNode.insertBefore(trElement, torrentRow);
 
   // clear inputs after adding row (TODO: hide invalidation, preserve detection on user input/submit)
   const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
@@ -31,7 +36,11 @@ function addRow() {
   }
 }
 
-// TODO: need a function for double mouse click to highlight data (overflow is hidden)
+// TODO
+function editRow(e) {
+}
+
+// TODO: need a function for double mouse click to highlight/copy data (overflow is hidden)
 
 // button element with btn-delete id should remove its ancestor row on user click
 // TODO: how to separate from HTML and manipulate unrendered btn-delete element?
@@ -72,7 +81,7 @@ function toggleSort(e) {
   }
 }
 
-// reveal btn-edit options onmouseover
+// reveal edit options onmouseover
 function revealOptions(e) {
   // create cancel button
   const cancel = document.createElement("button");
@@ -92,14 +101,26 @@ function revealOptions(e) {
   const saveId = document.createAttribute("id");
   saveId.value = "btn-save";
   save.setAttributeNode(saveId);
-  // add buttons before btn-delete
-  const del = document.getElementById("btn-delete");
-  e.parentNode.insertBefore(cancel, del);
-  e.parentNode.insertBefore(save, del);
-  // remove btn-edit
+  // add buttons before delete button
+  e.parentNode.insertBefore(cancel, e.parentNode.childNodes[e.parentNode.childNodes.length-1]);
+  e.parentNode.insertBefore(save, e.parentNode.childNodes[e.parentNode.childNodes.length-1]);
   e.remove(e);
 }
 
-// TODO: revert btn-edit options onmouseout
+// TODO: remove cancel and save buttons, re-add edit button
 function revertOptions(e) {
+  /* old code for revertOptions(e)
+  const edit = document.createElement("button");
+  const editType = document.createAttribute("type");
+  editType.value = "button";
+  edit.setAttributeNode(editType);
+  edit.innerHTML = "Edit";
+  const editEvent = document.createAttribute("onclick");
+  editEvent.value = "editRow(this)";
+  edit.setAttributeNode(editEvent);
+  // add buttons before btn-delete
+  e.insertBefore(edit, e.childNodes[e.childNodes.length-1]);
+  // TODO: only remove btn-cancel and btn-save
+  e.removeChild(e.childNodes[0]);
+  e.removeChild(e.childNodes[0]);*/
 }
