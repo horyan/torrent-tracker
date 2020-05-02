@@ -31,6 +31,8 @@ function addRow() {
   }
 }
 
+// TODO: need a function for double mouse click to highlight data (overflow is hidden)
+
 // button element with btn-delete id should remove its ancestor row on user click
 // TODO: how to separate from HTML and manipulate unrendered btn-delete element?
 function deleteRow(e) {
