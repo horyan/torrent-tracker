@@ -10,7 +10,7 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button type="button" onclick="editRow(this)" onmouseover="revealOptions(this)">Edit</button><button type="button" onclick="deleteRow(this)">Delete</button>'];
+                        '<button type="button">Edit</button><button type="button" onclick="deleteRow(this)">Delete</button>'];
 
   const trElement = document.createElement("tr");
   const trClass = document.createAttribute("class");
@@ -21,14 +21,13 @@ function addRow() {
     tdElements[i].innerHTML = tdElementContents[i]; 
     trElement.appendChild(tdElements[i]);
   }
-  // add onmouseover attribute to last td since no id for selecting
-  const tdEventOver = document.createAttribute("onmouseover");
-  tdEventOver.value = "revertOptions(this)";
-  tdElements[5].setAttributeNode(tdEventOver);
+  // tdElement[5] onmouseenter event
+  const demo = document.createAttribute("onmouseenter");
+  demo.value = "revealOptions(this)";
+  tdElements[5].setAttributeNode(demo);
   // insert row before inputs
   const torrentRow = document.getElementById("torrent-row");
   torrentRow.parentNode.insertBefore(trElement, torrentRow);
-
   // clear inputs after adding row (TODO: hide invalidation, preserve detection on user input/submit)
   const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
   for (let i = 0; i < torrentNames.length; i++) {
@@ -36,13 +35,9 @@ function addRow() {
   }
 }
 
-// TODO
-function editRow(e) {
-}
+// TODO: dblclick to copy overflow affected columns: name/uri
 
-// TODO: need a function for double mouse click to highlight/copy data (overflow is hidden)
-
-// button element with btn-delete id should remove its ancestor row on user click
+// remove ancestor row from delete onclick
 // TODO: how to separate from HTML and manipulate unrendered btn-delete element?
 function deleteRow(e) {
   const userRow = e.parentElement.parentElement;
@@ -81,46 +76,23 @@ function toggleSort(e) {
   }
 }
 
-// reveal edit options onmouseover
+// reveal edit options from tdElements[5] onmouseenter
 function revealOptions(e) {
-  // create cancel button
+  // remap edit
+  e.firstChild.textContent = "Save";
+  // create save button
   const cancel = document.createElement("button");
   const cancelType = document.createAttribute("type");
   cancelType.value = "button";
   cancel.setAttributeNode(cancelType);
   cancel.innerHTML = "Cancel";
-  const cancelId = document.createAttribute("id");
-  cancelId.value = "btn-cancel";
-  cancel.setAttributeNode(cancelId);
-  // create save button
-  const save = document.createElement("button");
-  const saveType = document.createAttribute("type");
-  saveType.value = "button";
-  save.setAttributeNode(saveType);
-  save.innerHTML = "Save";
-  const saveId = document.createAttribute("id");
-  saveId.value = "btn-save";
-  save.setAttributeNode(saveId);
-  // add buttons before delete button
-  e.parentNode.insertBefore(cancel, e.parentNode.childNodes[e.parentNode.childNodes.length-1]);
-  e.parentNode.insertBefore(save, e.parentNode.childNodes[e.parentNode.childNodes.length-1]);
-  e.remove(e);
+  // add cancel button before save button
+  e.insertBefore(cancel, e.firstChild);
+  e.onmouseleave = function(){revertOptions(this);};
 }
 
-// TODO: remove cancel and save buttons, re-add edit button
+// remove cancel button and remap save
 function revertOptions(e) {
-  /* old code for revertOptions(e)
-  const edit = document.createElement("button");
-  const editType = document.createAttribute("type");
-  editType.value = "button";
-  edit.setAttributeNode(editType);
-  edit.innerHTML = "Edit";
-  const editEvent = document.createAttribute("onclick");
-  editEvent.value = "editRow(this)";
-  edit.setAttributeNode(editEvent);
-  // add buttons before btn-delete
-  e.insertBefore(edit, e.childNodes[e.childNodes.length-1]);
-  // TODO: only remove btn-cancel and btn-save
-  e.removeChild(e.childNodes[0]);
-  e.removeChild(e.childNodes[0]);*/
+  e.removeChild(e.firstChild);
+  e.firstChild.textContent = "Edit";
 }
