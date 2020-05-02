@@ -10,12 +10,12 @@ function addRow() {
                         torrentForm["size"].value,
                         torrentForm["seeders"].value,
                         torrentForm["leechers"].value,
-                        '<button id="btn-edit" type="button">Edit</button><button id="btn-delete" type="button" onclick="deleteRow(this)">Delete</button>'];
+                        '<button id="btn-edit" type="button" onmouseover="revealOptions(this)" onmouseout="revertOptions(this)">Edit</button><button id="btn-delete" type="button" onclick="deleteRow(this)">Delete</button>'];
 
   const trElement = document.createElement("tr");
-  const trAttribute = document.createAttribute("class");
-  trAttribute.value = "user-row";
-  trElement.setAttributeNode(trAttribute);
+  const trClass = document.createAttribute("class");
+  trClass.value = "user-row";
+  trElement.setAttributeNode(trClass);
   for (let i = 0; i < tdElements.length; i++) {
     tdElements[i] = document.createElement("td");
     tdElements[i].innerHTML = tdElementContents[i]; 
@@ -41,7 +41,7 @@ function deleteRow(e) {
 }
 
 // clear non-empty inputs (TODO: hide invalidation, preserve detection on user input/submit)
-document.getElementById("btn-cancel").onclick = function() {
+document.getElementById("btn-clear").onclick = function() {
   const torrentNames = ["name", "uri", "size", "seeders", "leechers"];
   const torrentForm = document.forms["torrent-form"];
   for (let i = 0; i < torrentNames.length; i++) {
@@ -72,10 +72,34 @@ function toggleSort(e) {
   }
 }
 
-// test hover before applying to addRow() spawn
-document.getElementById("btn-cancel").onmouseover = function() {
-  this.innerHTML = "CLEAR";
-};
-document.getElementById("btn-cancel").onmouseout = function() {
-  this.innerHTML = "Clear";
-};
+// reveal btn-edit options onmouseover
+function revealOptions(e) {
+  // create cancel button
+  const cancel = document.createElement("button");
+  const cancelType = document.createAttribute("type");
+  cancelType.value = "button";
+  cancel.setAttributeNode(cancelType);
+  cancel.innerHTML = "Cancel";
+  const cancelId = document.createAttribute("id");
+  cancelId.value = "btn-cancel";
+  cancel.setAttributeNode(cancelId);
+  // create save button
+  const save = document.createElement("button");
+  const saveType = document.createAttribute("type");
+  saveType.value = "button";
+  save.setAttributeNode(saveType);
+  save.innerHTML = "Save";
+  const saveId = document.createAttribute("id");
+  saveId.value = "btn-save";
+  save.setAttributeNode(saveId);
+  // add buttons before btn-delete
+  const del = document.getElementById("btn-delete");
+  e.parentNode.insertBefore(cancel, del);
+  e.parentNode.insertBefore(save, del);
+  // remove btn-edit
+  e.remove(e);
+}
+
+// TODO: revert btn-edit options onmouseout
+function revertOptions(e) {
+}

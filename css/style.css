@@ -66,7 +66,7 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-td:last-child {
+.user-row td:last-child {
   background-color: #D4EBD0;
 }
 td:focus-within:not(:last-child) {
