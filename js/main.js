@@ -33,7 +33,7 @@ function addNewRow() {
 
 
 function deleteRow(e) {
-  const userRow = e.parentElement.parentElement; // TODO: specify unique button id attr
+  const userRow = e.parentElement.parentElement; // TODO: specify unique tr id attr
   userRow.remove(userRow);
 }
 
@@ -70,9 +70,13 @@ function hoverEditOff(e) {
 /* Operators */
 
 // onclick: toggle color theme
-document.getElementById('btn-theme').onclick = () => {
-  document.body.classList.toggle('dark') === true ? this.textContent = 'Light Mode' : this.textContent = 'Dark Mode';
-};
+document.getElementById('btn-theme').addEventListener('click', () => {
+  if (document.body.classList.toggle('dark') === true) {
+    this.textContent = 'Light Mode';
+  } else {
+    this.textContent = 'Dark Mode';
+  }
+});
 
 
 // onclick: toggle column sort |TODO: add asc/desc sort logic
@@ -83,34 +87,34 @@ for (let i = 0; i < sortButtons.length; i++) {
 
 
 // onsubmit: add-button fires addNewRow() and don't send form anywhere
-document.getElementById('torrent-form').onsubmit = () => { addNewRow(); return false; };
+document.getElementById('torrent-form').addEventListener('submit', () => { addNewRow(); return false; });
 
 
 // onclick: remove non-empty input fields |TODO: fix invalidation styling in this scenario
-document.getElementById('btn-clear').onclick = () => {
+document.getElementById('btn-clear').addEventListener('click', () => {
   const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
   const torrentForm = document.forms['torrent-form'];
 
   for (let i = 0; i < torrentNames.length; i++) {
     if (torrentForm[torrentNames[i]].value !== '') torrentForm[torrentNames[i]].value = '';
   }
-};
+});
 
 
 // onclick: add 5 new test rows to table (for testing)
-document.getElementById('add5').onclick = () => {
+document.getElementById('add5').addEventListener('click', () => {
   const torrentForm = document.forms['torrent-form'];
   const numNewRows = 5;
   
   for (let i = 0; i < numNewRows; i++) {
-    torrentForm['name'].value='1';
-    torrentForm['uri'].value='1';
-    torrentForm['size'].value='1';
-    torrentForm['seeders'].value='1';
-    torrentForm['leechers'].value='1';
+    torrentForm['name'].value = i;
+    torrentForm['uri'].value = i;
+    torrentForm['size'].value = i;
+    torrentForm['seeders'].value = i;
+    torrentForm['leechers'].value = i;
     addNewRow();
   }
-};
+});
 
-
+// TODO: consider using named functions with addEventListener
 // TODO: clipboard copy name/uri data cell on dblclick event
