@@ -1,80 +1,42 @@
-// add 5 test rows to table
-document.getElementById('add5').onclick = () => {
-  const torrentForm = document.forms['torrent-form'];
-  const numRows = 5;
-  for (let i = 0; i < numRows; i++) {
-    torrentForm['name'].value='1';
-    torrentForm['uri'].value='1';
-    torrentForm['size'].value='1';
-    torrentForm['seeders'].value='1';
-    torrentForm['leechers'].value='1';
-    addRow();
-  }
-};
+/* Declarations */
 
-// store input inside local td children of tr, then insert row before torrentRow
-document.getElementById('torrent-form').onsubmit = () => {addRow(); return false;}; // don't send form (avoid refresh)
-function addRow() {
+function addNewRow() {
   let name, uri, size, seeders, leechers, options;
-  const tdElements = [name, uri, size, seeders, leechers, options]; 
+  const newTds = [name, uri, size, seeders, leechers, options]; 
 
   const torrentForm = document.forms['torrent-form'];
-  const tdElementContents = [torrentForm['name'].value,
-                            torrentForm['uri'].value,
-                            torrentForm['size'].value,
-                            torrentForm['seeders'].value,
-                            torrentForm['leechers'].value,
-                            '<button type="button">Edit</button><button type="button" onclick="deleteRow(this)">Delete</button>'];
+  const newTdContents = [torrentForm['name'].value, torrentForm['uri'].value, torrentForm['size'].value,
+                        torrentForm['seeders'].value, torrentForm['leechers'].value,
+                        '<button type="button">Edit</button>' +
+                        '<button type="button" onclick="deleteRow(this)">Delete</button>']; // fix last item clutter
 
-  const trElement = document.createElement('tr');
-  trElement.className = 'user-row';
-  for (let i = 0; i < tdElements.length; i++) {
-    tdElements[i] = document.createElement('td');
-    tdElements[i].innerHTML = tdElementContents[i]; // innerHTML property to support last td element's content
-    trElement.appendChild(tdElements[i]);
+  const newTr = document.createElement('tr');
+  newTr.className = 'user-row';
+
+  for (let i = 0; i < newTds.length; i++) {
+    newTds[i] = document.createElement('td'); // store input inside local td children of tr
+    newTds[i].innerHTML = newTdContents[i]; // support HTML content
+    newTr.appendChild(newTds[i]);
   }
-  // assign onmouseenter attribute to last td element
-  tdElements[tdElements.length-1].setAttribute('onmouseenter', 'revealOptions(this)');
-  // insert tr element before torrentRow
+  
+  newTds[newTds.length-1].setAttribute('onmouseenter', 'hoverEditOn(this)'); // assign attr to last td
+  
   const torrentRow = document.getElementById('torrent-row');
-  torrentRow.parentNode.insertBefore(trElement, torrentRow);
-  // clear input text fields after inserting input row |TODO: remove invalidation styles in this scenario
+  torrentRow.parentNode.insertBefore(newTr, torrentRow); // insert new row before torrentRow
+  
+  //TODO: remove invalidation styles in this scenario
   const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
   for (let i = 0; i < torrentNames.length; i++) {
-    torrentForm[torrentNames[i]].value = '';
+    torrentForm[torrentNames[i]].value = ''; // clear input text fields
   }
 }
 
-// TODO: clipboard copy name/uri data cell on dblclick event
 
-// remove row on delete button's onclick event |TODO: specify unique button id attr
 function deleteRow(e) {
-  const userRow = e.parentElement.parentElement;
+  const userRow = e.parentElement.parentElement; // TODO: specify unique button id attr
   userRow.remove(userRow);
 }
 
-// remove non-empty input texts |TODO: remove invalidation style in this scenario
-document.getElementById('btn-clear').onclick = () => {
-  const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
-  const torrentForm = document.forms['torrent-form'];
-  for (let i = 0; i < torrentNames.length; i++) {
-    if (torrentForm[torrentNames[i]].value != '')
-      torrentForm[torrentNames[i]].value = '';
-  }
-};
-
-// toggle color theme
-document.getElementById('btn-theme').onclick = () => {
-  document.body.classList.toggle('dark') === true ? this.textContent = 'Light Mode' : this.textContent = 'Dark Mode';
-};
-
-// rotate column sort indicator |TODO: add asc/desc sort logic
-// document.getElementById("btn-name").onclick = (e) => {toggleSort(this);}; // arrow syntax issue regardless of parameter/this argument exclusion
-document.getElementById('btn-name').onclick = function() {toggleSort(this);}; // won't work with implicit this
-document.getElementById('btn-uri').onclick = function() {toggleSort(this);};
-document.getElementById('btn-size').onclick = function() {toggleSort(this);};
-document.getElementById('btn-seeders').onclick = function() {toggleSort(this);};
-document.getElementById('btn-leechers').onclick = function() {toggleSort(this);};
 
 function toggleSort(e) {
   if (e.innerHTML === '\u25b7' /*'▷'*/) {
@@ -86,20 +48,72 @@ function toggleSort(e) {
   }
 }
 
-// reveal edit options in user row's last td element on onmouseenter event
-function revealOptions(e) {
-  e.firstElementChild.textContent = 'Save'; // remap edit button text render
-  // create save button
+
+function hoverEditOn(e) {
+  e.firstElementChild.textContent = 'Save'; // remap edit to save
+
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button')
   cancel.innerHTML = 'Cancel';
-  // add cancel button before save button
-  e.insertBefore(cancel, e.firstElementChild);
-  e.onmouseleave = function() {revertOptions(this);}; // similar issue with arrow conversion
+
+  e.insertBefore(cancel, e.firstElementChild); // add cancel button before save button
+  e.onmouseleave = function() {hoverEditOff(this);}; // similar issue with arrow conversion
 }
 
-// remove cancel button and remap save
-function revertOptions(e) {
-  e.removeChild(e.firstElementChild);
-  e.firstElementChild.textContent = 'Edit';
+
+function hoverEditOff(e) {
+  e.removeChild(e.firstElementChild); // remove exposed cancel button
+  e.firstElementChild.textContent = 'Edit'; // remap save to edit
 }
+
+
+/* Operators */
+
+// onclick: toggle color theme
+document.getElementById('btn-theme').onclick = () => {
+  document.body.classList.toggle('dark') === true ? this.textContent = 'Light Mode' : this.textContent = 'Dark Mode';
+};
+
+
+// onsubmit: add-button fires addNewRow() and doesn't send form anywhere
+document.getElementById('torrent-form').onsubmit = () => { addNewRow(); return false; };
+
+
+// onclick: remove non-empty input fields
+// TODO: remove invalidation style in this scenario
+document.getElementById('btn-clear').onclick = () => {
+  const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
+  const torrentForm = document.forms['torrent-form'];
+
+  for (let i = 0; i < torrentNames.length; i++) {
+    if (torrentForm[torrentNames[i]].value !== '') torrentForm[torrentNames[i]].value = '';
+  }
+};
+
+
+// TODO: add asc/desc sort logic
+// (e) => {toggleSort(this);}; syntax issue even if function parameter and 'this' argument are excluded
+document.getElementById('btn-name').onclick = function() {toggleSort(this);}; // won't work with implicit this
+document.getElementById('btn-uri').onclick = function() {toggleSort(this);};
+document.getElementById('btn-size').onclick = function() {toggleSort(this);};
+document.getElementById('btn-seeders').onclick = function() {toggleSort(this);};
+document.getElementById('btn-leechers').onclick = function() {toggleSort(this);};
+
+
+// onclick: add 5 new test rows to table (TESTING PURPOSES)
+document.getElementById('add5').onclick = () => {
+  const torrentForm = document.forms['torrent-form'];
+  const numNewRows = 5;
+  
+  for (let i = 0; i < numNewRows; i++) {
+    torrentForm['name'].value='1';
+    torrentForm['uri'].value='1';
+    torrentForm['size'].value='1';
+    torrentForm['seeders'].value='1';
+    torrentForm['leechers'].value='1';
+    addNewRow();
+  }
+};
+
+
+// TODO: clipboard copy name/uri data cell on dblclick event

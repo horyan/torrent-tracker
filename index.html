@@ -10,7 +10,7 @@
     <header>
       <nav>
         <button id="btn-theme">Dark Mode</button>
-        <button id="add5">Add 5 rows</button>
+        <button id="add5">+5 Rows</button>
       </nav>
       <h1>Torrent Tracker</h1>
     </header>
@@ -29,11 +29,11 @@
           </thead>
           <tbody>
             <tr id="torrent-row">
-              <td><input id="name" name="name" placeholder="Enter Name..." required></td>
-              <td><input id="uri" name="uri" placeholder="Enter Name..." required></td>
-              <td><input id="size" name="size" placeholder="Enter Size..." required></td>
-              <td><input id="seeders" name="seeders" placeholder="Enter Seeders..." pattern="[1-9]\d*|0" required></td>
-              <td><input id="leechers" name="leechers" placeholder="Enter Leechers..." pattern="[1-9]\d*|0" required></td>
+              <td><input id="name" name="name" placeholder="Enter..." required></td> <!-- need regex -->
+              <td><input id="uri" name="uri" placeholder="Enter..." required></td> <!-- need regex -->
+              <td><input id="size" name="size" placeholder="Enter..." required></td> <!-- need regex -->
+              <td><input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
+              <td><input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
               <td><button type="button" id="btn-clear">Clear</button><button type="submit">Add</button></td>
             </tr>
           </tbody>
