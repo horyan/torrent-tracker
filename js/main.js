@@ -1,5 +1,93 @@
 /* Declarations */
 
+var testTorrents = [
+  {
+    name: "test",
+    uri: "test.test.com",
+    size: 12345,
+    seeders: 123,
+    leechers: 123,
+  },
+  {
+    name: "test 234",
+    uri: "test.ioi.com",
+    size: 1232,
+    seeders: 23,
+    leechers: 23
+  }
+]
+
+function populateTable(testTorrents){
+
+  const torrentBody = document.getElementById('torrent-body');
+
+  for (var i = 0; i < testTorrents.length; ++i) {
+    torrentBody.appendChild(constructRowTemplate(testTorrents[i], i)); // insert 
+  }
+}
+
+
+function constructRowTemplate(torrent, index) {
+
+  const newTr = document.createElement('tr');
+  newTr.setAttribute("id", `row-${index}`)
+
+  // Magic!
+  let tdName = document.createElement('td');
+  tdName.innerText = torrent.name;
+  newTr.appendChild(tdName);
+
+  let tdUri = document.createElement('td');
+  tdUri.innerText = torrent.uri;
+  newTr.appendChild(tdUri);
+
+  let tdSize = document.createElement('td');
+  tdSize.innerText = torrent.size;
+  newTr.appendChild(tdSize);
+
+
+  let tdSeeders = document.createElement('td');
+  tdSeeders.innerText = torrent.seeders;
+  newTr.appendChild(tdSeeders);
+
+  let tdLeechers = document.createElement('td');
+  tdLeechers.innerText = torrent.leechers;
+  newTr.appendChild(tdLeechers);
+
+
+  let tdOptions = document.createElement('td');
+  tdOptions.setAttribute('class', 'options-hover')
+
+  let optionsDefault = document.createElement('div');
+  let editButton = document.createElement('button');
+  editButton.innerText = "Edit"
+  let deleteButton = document.createElement('button');  
+  deleteButton.innerText = "Delete"
+
+  let optionsHidden = document.createElement('div');
+  optionsHidden.setAttribute('class', 'hidden')
+
+  let cancelButton = document.createElement('button');
+  cancelButton.innerText = "Cancel"
+  let saveButton = document.createElement('button');
+  saveButton.innerText = "Save"
+
+  optionsDefault.appendChild(editButton);
+  optionsDefault.appendChild(deleteButton);
+  optionsHidden.appendChild(cancelButton);
+  optionsHidden.appendChild(saveButton);
+  
+  tdOptions.appendChild(optionsDefault);
+  tdOptions.appendChild(optionsHidden);
+
+  newTr.appendChild(tdOptions);
+
+  return newTr;
+}
+
+
+
+
 function addNewRow() {
   let name, uri, size, seeders, leechers, options;
   const newTds = [name, uri, size, seeders, leechers, options]; 
@@ -29,6 +117,7 @@ function addNewRow() {
   for (let i = 0; i < torrentNames.length; i++) {
     torrentForm[torrentNames[i]].value = ''; // clear input text fields
   }
+
 }
 
 
@@ -87,7 +176,10 @@ for (let i = 0; i < sortButtons.length; i++) {
 
 
 // onsubmit: add-button fires addNewRow() and don't send form anywhere
-document.getElementById('torrent-form').addEventListener('submit', () => { addNewRow(); return false; });
+document.getElementById('torrent-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  addNewRow();
+});
 
 
 // onclick: remove non-empty input fields |TODO: fix invalidation styling in this scenario
@@ -118,3 +210,4 @@ document.getElementById('add5').addEventListener('click', () => {
 
 // TODO: consider using named functions with addEventListener
 // TODO: clipboard copy name/uri data cell on dblclick event
+

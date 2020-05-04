@@ -66,6 +66,7 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .user-row td:last-child {
   background-color: #D4EBD0;
 }
@@ -81,4 +82,11 @@ button {
   padding: 0 .5rem;
   border: 0;
   /* TODO: more selectors to target varying padding and margin */
+}
+
+
+
+
+.hidden {
+  display: none;
 }

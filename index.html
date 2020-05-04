@@ -27,16 +27,22 @@
               <th scope="col">Options</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="torrent-body">
             <tr id="torrent-row">
               <td><input id="name" name="name" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="uri" name="uri" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="size" name="size" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
               <td><input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
-              <td><button type="button" id="btn-clear">Clear</button><button type="submit">Add</button></td>
+              <td>
+                <button type="button" id="btn-clear">Clear</button>
+                <button type="submit">Add</button>
+              </td>
             </tr>
           </tbody>
+          <tfoot>
+             <!-- AGGGH RYAN https://www.w3schools.com/tags/tag_tfoot.asp -->
+          </tfoot>
         </table>
       </form>
     </main>
