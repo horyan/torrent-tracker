@@ -87,7 +87,10 @@ for (let i = 0; i < sortButtons.length; i++) {
 
 
 // onsubmit: add-button fires addNewRow() and don't send form anywhere
-document.getElementById('torrent-form').addEventListener('submit', () => { addNewRow(); return false; });
+document.getElementById('torrent-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  addNewRow(); return false;
+});
 
 
 // onclick: remove non-empty input fields |TODO: fix invalidation styling in this scenario
