@@ -19,10 +19,9 @@ function addNewRow() {
     newTr.appendChild(newTds[i]);
   }
   
-  newTds[newTds.length-1].addEventListener('mouseenter', hoverEditOn); // listen for mouseenter on last td
+  newTds[newTds.length-1].addEventListener('mouseenter', enableRowEdit); // TODO: map edit button click
   
-  const torrentRow = document.getElementById('torrent-row');
-  torrentRow.parentNode.insertBefore(newTr, torrentRow); // insert new row before torrentRow
+  document.getElementById('torrent-tbody').appendChild(newTr);
   
   // fix invalidation styling in this scenario
   const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
@@ -39,17 +38,21 @@ function deleteRow(e) {
 
 
 function toggleSort(e) {
-  if (e.target.innerHTML === '\u25b7' /*'▷'*/) {
-    e.target.innerHTML = '&#9651';
-  } else if (e.innerHTML === '\u25b3' /*'△'*/) {
-    e.target.innerHTML = '&#9661';
+  if (e.target.innerHTML === '\u00AB') {
+    console.log('enter if');
+    e.target.innerHTML = '&and;';
+  } else if (e.target.innerHTML === '\u2227') {
+    console.log('enter else if');
+    e.target.innerHTML = '&or;';
   } else {
-    e.target.innerHTML = '&#9655';
+    console.log('enter else');
+    e.target.innerHTML = '&laquo;';
   }
 }
 
 
-function hoverEditOn(e) {
+// TODO: transform row into inputs
+function enableRowEdit(e) {
   e.target.firstElementChild.textContent = 'Save'; // remap edit to save
 
   const cancel = document.createElement('button');
@@ -57,11 +60,11 @@ function hoverEditOn(e) {
   cancel.innerHTML = 'Cancel';
 
   e.target.insertBefore(cancel, e.target.firstElementChild); // add cancel button before save button
-  e.target.addEventListener('mouseleave', hoverEditOff);
+  e.target.addEventListener('mouseleave', disableRowEdit);
 }
 
 
-function hoverEditOff(e) {
+function disableRowEdit(e) {
   e.target.removeChild(e.target.firstElementChild); // remove exposed cancel button
   e.target.firstElementChild.textContent = 'Edit'; // remap save to edit
 }
@@ -89,7 +92,7 @@ for (let i = 0; i < sortButtons.length; i++) {
 // onsubmit: add-button fires addNewRow() and don't send form anywhere
 document.getElementById('torrent-form').addEventListener('submit', (e) => {
   e.preventDefault();
-  addNewRow(); return false;
+  addNewRow();
 });
 
 
@@ -104,10 +107,10 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 });
 
 
-// onclick: add 5 new test rows to table (for testing)
-document.getElementById('add5').addEventListener('click', () => {
+// onclick: mimic user and add test rows 
+document.getElementById('test-add').addEventListener('click', () => {
   const torrentForm = document.forms['torrent-form'];
-  const numNewRows = 5;
+  const numNewRows = 10;
   
   for (let i = 0; i < numNewRows; i++) {
     torrentForm['name'].value = i;
@@ -115,9 +118,10 @@ document.getElementById('add5').addEventListener('click', () => {
     torrentForm['size'].value = i;
     torrentForm['seeders'].value = i;
     torrentForm['leechers'].value = i;
-    addNewRow();
+    document.getElementById('btn-submit').click();
   }
 });
+
 
 // TODO: consider using named functions with addEventListener
 // TODO: clipboard copy name/uri data cell on dblclick event

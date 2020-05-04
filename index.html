@@ -10,33 +10,35 @@
     <header>
       <nav>
         <button id="btn-theme">Dark Mode</button>
-        <button id="add5">+5 Rows</button>
+        <button id="test-add">+10 Rows</button>
       </nav>
       <h1>Torrent Tracker</h1>
     </header>
     <main>
-      <form id="torrent-form">
+      <form id="torrent-form" name="torrent-form">
         <table>
           <thead>
             <tr>
-              <th scope="col"><label for="name">Name</label><button type="button" id="btn-name">&#9655</button></th>
-              <th scope="col"><label for="uri">URI</label><button type="button" id="btn-uri">&#9655</button></th>
-              <th scope="col"><label for="size">Size</label><button type="button" id="btn-size">&#9655</button></th>
-              <th scope="col"><label for="seeders">Seeders</label><button type="button" id="btn-seeders">&#9655</button></th>
-              <th scope="col"><label for="leechers">Leechers</label><button type="button" id="btn-leechers">&#9655</button></th>
+              <th scope="col"><label for="name">Name</label><button type="button" id="btn-name">&laquo;</button></th>
+              <th scope="col"><label for="uri">URI</label><button type="button" id="btn-uri">&laquo;</button></th>
+              <th scope="col"><label for="size">Size</label><button type="button" id="btn-size">&laquo;</button></th>
+              <th scope="col"><label for="seeders">Seeders</label><button type="button" id="btn-seeders">&laquo;</button></th>
+              <th scope="col"><label for="leechers">Leechers</label><button type="button" id="btn-leechers">&laquo;</button></th>
               <th scope="col">Options</th>
             </tr>
           </thead>
-          <tbody>
-            <tr id="torrent-row">
+          <tbody id="torrent-tbody">
+          </tbody>
+          <tfoot>
+            <tr>
               <td><input id="name" name="name" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="uri" name="uri" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="size" name="size" placeholder="Enter..." required></td> <!-- need regex -->
               <td><input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
               <td><input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
-              <td><button type="button" id="btn-clear">Clear</button><button type="submit">Add</button></td>
+              <td><button type="button" id="btn-clear">Clear</button><button id="btn-submit" type="submit">Add</button></td>
             </tr>
-          </tbody>
+          </tfoot>
         </table>
       </form>
     </main>
