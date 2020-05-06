@@ -2,32 +2,42 @@
 
 function populateTable(torrents) {
   const tableBody = document.getElementById('torrent-tbody');
-  console.log(tableBody); 
   for (let i = 0; i < torrents.length; ++i){
     tableBody.appendChild(constructRowTemplate(torrents[i], i)); // insert row child
   }
 }
 
 function constructRowTemplate(torrent, index){
+  console.log(torrent);
   // torrent doesn't have a length to loop through
   const tr = document.createElement('tr');
   tr.setAttribute('id', `row-${index}`);
 
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
-    console.log('');// why isn't it entering here?
     const td = document.createElement('td');
     td.textContent = torrentValues[i];
     tr.appendChild(td);
   }
 
-  // TODO: fill options
+  const tdOption = document.createElement('td');
+  const editBtn = document.createElement('button');
+  const deleteBtn = document.createElement('button');
   
+  editBtn.textContent = 'Edit';
+  editBtn.addEventListener('click', enableRowEdit);
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.addEventListener('click', deleteRow);
+
+  tdOption.appendChild(editBtn);
+  tdOption.appendChild(deleteBtn);
+  tr.appendChild(tdOption);
+
   return tr;
 }
 
 function deleteRow(e) {
-  const userRow = e.parentElement.parentElement; // TODO: specify unique tr id attr
+  const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
 }
 
@@ -75,12 +85,6 @@ for (let i = 0; i < sortButtons.length; i++) {
   document.getElementById(sortButtons[i]).addEventListener('click', toggleSort);
 }
 
-// onsubmit: add-button fires addNewRow() and don't send form anywhere
-document.getElementById('torrent-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  addNewRow();
-});
-
 // onclick: remove non-empty input fields |TODO: fix invalidation styling in this scenario
 document.getElementById('btn-clear').addEventListener('click', () => {
   const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
@@ -91,8 +95,8 @@ document.getElementById('btn-clear').addEventListener('click', () => {
   }
 });
 
-// onclick: mimic user and add test rows 
-document.getElementById('test-add').addEventListener('click', () => {
+/*// onclick: mimic user and add test rows 
+document.getElementById('user-test').addEventListener('click', () => {
   const torrentForm = document.forms['torrent-form'];
   const numNewRows = 10;
   
@@ -104,24 +108,64 @@ document.getElementById('test-add').addEventListener('click', () => {
     torrentForm['leechers'].value = i;
     document.getElementById('btn-submit').click();
   }
+});*/
+
+document.getElementById('json-test').addEventListener('click', () => {
+  /*const lazyTorrent = [
+  {
+    0: "",
+    1: "",
+    2: "",
+    3: "",
+    4: ""
+  }
+  ];
+  const testTorrent = [
+    {
+      name: "test",
+      uri: "test.test.com",
+      size: 12345,
+      seeders: 123,
+      leechers:123
+    }
+  ];*/
+
+  const testTorrents = [
+    {
+      name: "test",
+      uri: "test.test.com",
+      size: 12345,
+      seeders: 123,
+      leechers: 123
+    },
+    {
+      name: "test 1234",
+      uri: "test.ioi.com",
+      size: 1232,
+      seeders: 23,
+      leechers: 23
+    }
+  ];
+  populateTable(testTorrents);
 });
 
-const testTorrents = [
-  {
-    name: "test",
-    uri: "test.test.com",
-    size: 12345,
-    seeders: 123,
-    leechers: 123
-  },
-  {
-    name: "test 1234",
-    uri: "test.ioi.com",
-    size: 1232,
-    seeders: 23,
-    leechers: 23
+// onsubmit: add row from JSON
+document.getElementById('user-test').addEventListener('click', () => {
+  const inputsArray = [];
+  const inputs = document.querySelectorAll('#torrent-tr input');
+  for (let i = 0; i < inputs.length; ++i){
+    inputsArray.push(inputs[i].value);
   }
-]
+  const testTorrents = {...inputsArray};
+  console.log(testTorrents);
+  populateTable(testTorrents);
+  /*const inputs = document.querySelectorAll('#torrent-tr input');
+  const temp = {1:"", 2:"", 3:"", 4:"", 5:""};
+  let i = 0;
+  Object.keys(temp).forEach( (key)=> {temp[key] = inputs[i].value; i++;} );
+  console.log(temp);
+  populateTable(temp);*/
+});
 
 // TODO: consider using named functions with addEventListener
 // TODO: clipboard copy name/uri data cell on dblclick event

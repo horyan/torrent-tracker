@@ -60,13 +60,13 @@ td {
   text-align: center;
   background-color: #FAF4FF; 
 }
-.user-row td:not(:last-child) {
+tbody td:not(:last-child) {
   background-color: #D4EBD0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.user-row td:last-child {
+tbody td:last-child {
   background-color: #D4EBD0;
 }
 td:focus-within:not(:last-child) {
