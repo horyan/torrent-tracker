@@ -19,24 +19,52 @@
         <table>
           <thead>
             <tr>
-              <th scope="col"><label for="name">Name</label><button type="button" id="btn-name">&laquo;</button></th>
-              <th scope="col"><label for="uri">URI</label><button type="button" id="btn-uri">&laquo;</button></th>
-              <th scope="col"><label for="size">Size</label><button type="button" id="btn-size">&laquo;</button></th>
-              <th scope="col"><label for="seeders">Seeders</label><button type="button" id="btn-seeders">&laquo;</button></th>
-              <th scope="col"><label for="leechers">Leechers</label><button type="button" id="btn-leechers">&laquo;</button></th>
+              <th scope="col">
+                <label for="name">Name</label>
+                <button type="button" id="btn-name">&laquo;</button>
+              </th>
+              <th scope="col">
+                <label for="uri">URI</label>
+                <button type="button" id="btn-uri">&laquo;</button>
+              </th>
+              <th scope="col">
+                <label for="size">Size</label>
+                <button type="button" id="btn-size">&laquo;</button>
+              </th>
+              <th scope="col">
+                <label for="seeders">Seeders</label>
+                <button type="button" id="btn-seeders">&laquo;</button>
+              </th>
+              <th scope="col">
+                <label for="leechers">Leechers</label>
+                <button type="button" id="btn-leechers">&laquo;</button>
+              </th>
               <th scope="col">Options</th>
             </tr>
           </thead>
           <tbody id="torrent-tbody">
           </tbody>
           <tfoot>
-            <tr>
-              <td><input id="name" name="name" placeholder="Enter..." required></td> <!-- need regex -->
-              <td><input id="uri" name="uri" placeholder="Enter..." required></td> <!-- need regex -->
-              <td><input id="size" name="size" placeholder="Enter..." required></td> <!-- need regex -->
-              <td><input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
-              <td><input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required></td>
-              <td><button type="button" id="btn-clear">Clear</button><button id="btn-submit" type="submit">Add</button></td>
+            <tr id="torrent-tr">
+              <td>
+                <input id="name" name="name" placeholder="Enter..." required>
+              </td>
+              <td>
+                <input id="uri" name="uri" placeholder="Enter..." required>
+              </td>
+              <td>
+                <input id="size" name="size" placeholder="Enter..." required>
+              </td>
+              <td>
+                <input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required>
+              </td>
+              <td>
+                <input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required>
+              </td>
+              <td>
+                <button type="button" id="btn-clear">Clear</button>
+                <button id="btn-submit" type="submit">Add</button>
+              </td>
             </tr>
           </tfoot>
         </table>
