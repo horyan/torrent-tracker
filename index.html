@@ -9,7 +9,7 @@
   <body>
     <header>
       <nav>
-        <button id="btn-theme">Dark Mode</button>
+        <button id="theme-btn">Dark Mode</button>
         <button id="json-test">+10 Rows</button>
       </nav>
       <h1>Torrent Tracker</h1>
@@ -21,31 +21,31 @@
             <tr>
               <th scope="col">
                 <label for="name">Name</label>
-                <button type="button" id="btn-name">&laquo;</button>
+                <button type="button" id="name-sort">&laquo;</button>
               </th>
               <th scope="col">
                 <label for="uri">URI</label>
-                <button type="button" id="btn-uri">&laquo;</button>
+                <button type="button" id="uri-sort">&laquo;</button>
               </th>
               <th scope="col">
                 <label for="size">Size</label>
-                <button type="button" id="btn-size">&laquo;</button>
+                <button type="button" id="size-sort">&laquo;</button>
               </th>
               <th scope="col">
                 <label for="seeders">Seeders</label>
-                <button type="button" id="btn-seeders">&laquo;</button>
+                <button type="button" id="seeders-sort">&laquo;</button>
               </th>
               <th scope="col">
                 <label for="leechers">Leechers</label>
-                <button type="button" id="btn-leechers">&laquo;</button>
+                <button type="button" id="leechers-sort">&laquo;</button>
               </th>
               <th scope="col">Options</th>
             </tr>
           </thead>
-          <tbody id="torrent-tbody">
+          <tbody id="torrent-data">
           </tbody>
           <tfoot>
-            <tr id="torrent-tr">
+            <tr id="torrent-input">
               <td>
                 <input id="name" name="name" placeholder="Enter..." required>
               </td>
@@ -62,8 +62,8 @@
                 <input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required>
               </td>
               <td>
-                <button type="reset" id="btn-clear">Clear</button>
-                <button id="btn-submit" type="submit">Add</button>
+                <button type="reset">Clear</button>
+                <button type="submit">Add</button>
               </td>
             </tr>
           </tfoot>
