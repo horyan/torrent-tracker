@@ -2,33 +2,91 @@ input {
   width: 100%;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000;
   background-color: #FAF4FF;
 }
+
+.dark input {
+  border-bottom: 1px solid #FFF;
+}
+
+.dark tfoot td {
+  background-color: #000;
+}
+
 input:focus {
   border: none;
   background-color: #D4EBD0;
 }
-.dark input {
+
+.dark input:focus {
   background-color: #313131;
 }
+
+.dark input {
+  background-color: #000;
+  color: #FFF;
+}
+
 th > button {
   background-color: #A4C5C6;
 }
+
 .dark th > button {
   background-color: #181818;
   color: #FFF;
 }
+
 h1 {
   text-align: center;
   margin: 0;
   margin-bottom: 1rem;
 }
-/* experimental above */
+
 body {
-  font-family: Muli, Arial, sans-serif;
+  font-family: sans-serif;
   background-color: #FAF4FF;
   margin: 0;
+}
+
+th, td {
+  padding: .3rem;
+}
+
+td {
+  text-align: center;
+  background-color: #FAF4FF; 
+}
+
+.dark tbody td:not(:last-child){
+  background-color: #313131;
+}
+
+tbody td:not(:last-child) {
+  background-color: #D4EBD0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dark tbody td:last-child {
+  background-color: #313131;
+}
+
+tbody td:last-child {
+  background-color: #D4EBD0;
+}
+
+td:focus-within:not(:last-child) {
+  background-color: #D4EBD0;
+}
+
+.dark td:focus-within:not(:last-child) {
+  background-color: #313131;
+}
+
+th {
+  background-color: #A4C5C6;
 }
 
 .dark {
@@ -37,7 +95,7 @@ body {
 }
 
 .dark td {
-  background-color: #313131;
+yy  background-color: #313131;
 }
 
 .dark th {
@@ -53,32 +111,12 @@ table {
   width: 100%;
 }
 
-th, td {
-  padding: .3rem;
-}
-td {
-  text-align: center;
-  background-color: #FAF4FF; 
-}
-tbody td:not(:last-child) {
-  background-color: #D4EBD0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-tbody td:last-child {
-  background-color: #D4EBD0;
-}
-td:focus-within:not(:last-child) {
-  background-color: #D4EBD0;
-}
-th {
-  background-color: #A4C5C6;
-}
-
 button {
   border-radius: .375rem;
   padding: 0 .5rem;
   border: 0;
-  /* TODO: more selectors to target varying padding and margin */
+}
+
+.dark input:placeholder-shown {
+  color: #FFF;
 }

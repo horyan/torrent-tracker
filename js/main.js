@@ -1,9 +1,8 @@
 /* Declarations */
 
-
 function populateTable(torrents) {
   const tableBody = document.getElementById('torrent-data');
-  let i = 0, j = document.getElementsByTagName('tr').length-1; // index for existing rows minus input row
+  let i = 0, j = document.getElementsByTagName('tr').length-1; // existing rows minus input row
   for (i, j; i < torrents.length; ++i, ++j){
     tableBody.appendChild(constructRowTemplate(torrents[i], j)); // insert row child
   }
@@ -41,7 +40,7 @@ function constructRowTemplate(torrent, index){
 
 
 function deleteRow(e) {
-  const userRow = e.target.parentElement.parentElement; // versus row-id?
+  const userRow = e.target.parentElement.parentElement; // TODO: target matching row-id in the future
   userRow.remove(userRow);
 }
 
@@ -92,9 +91,7 @@ function disableRowEdit(e) {
   e.target.firstElementChild.textContent = 'Edit'; // remap save to edit
 }
 
-
 /* Operators */
-
 
 // onclick: toggle color theme
 document.getElementById('theme-btn').addEventListener('click', () => {
@@ -116,7 +113,7 @@ for (let i = 0; i < sortButtons.length; ++i) {
 document.getElementById('json-test').addEventListener('click', () => {
   const dynamicTorrents = [];
 
-  let i =  0, j = document.getElementsByTagName('tr').length-1; // existing rows minutes input row
+  let i =  0, j = document.getElementsByTagName('tr').length-1; // existing rows minus input row
   for (i, j; i < 10; ++i, ++j){
     const temp = {
                   name: `torrent-${j}`,
