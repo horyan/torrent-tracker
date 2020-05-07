@@ -47,22 +47,22 @@
           <tfoot>
             <tr id="torrent-input">
               <td>
-                <input id="name" name="name" placeholder="Enter..." required>
+                <input id="name" name="name" type="text" placeholder="Enter.." required>
               </td>
               <td>
-                <input id="uri" name="uri" placeholder="Enter..." required>
+                <input id="uri" name="uri" type="text" placeholder="Enter.." required>
               </td>
               <td>
-                <input id="size" name="size" placeholder="Enter..." required>
+                <input id="size" name="size" type="text" placeholder="Enter.." required>
               </td>
               <td>
-                <input id="seeders" name="seeders" placeholder="Enter Num..." pattern="[1-9]\d*|0" required>
+                <input id="seeders" name="seeders" type="text" placeholder="Enter #.." pattern="[1-9]\d*|0" required>
               </td>
               <td>
-                <input id="leechers" name="leechers" placeholder="Enter Num..." pattern="[1-9]\d*|0" required>
+                <input id="leechers" name="leechers" type="text" placeholder="Enter #.." pattern="[1-9]\d*|0" required>
               </td>
               <td>
-                <button type="reset">Clear</button>
+                <button id="clear-btn" type="reset">Clear</button>
                 <button type="submit">Add</button>
               </td>
             </tr>
