@@ -8,11 +8,10 @@ function populateTable(torrents) {
 }
 
 function constructRowTemplate(torrent, index){
-  console.log(torrent);
-  // torrent doesn't have a length to loop through
   const tr = document.createElement('tr');
-  tr.setAttribute('id', `row-${index}`);
+  tr.setAttribute('id', `row-${index}`); // TODO: fix index collision with next batch of rows
 
+  // convert into array of object's values (iterable, has length)
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
     const td = document.createElement('td');
@@ -28,7 +27,7 @@ function constructRowTemplate(torrent, index){
   editBtn.addEventListener('click', enableRowEdit);
   deleteBtn.textContent = 'Delete';
   deleteBtn.addEventListener('click', deleteRow);
-
+  
   tdOption.appendChild(editBtn);
   tdOption.appendChild(deleteBtn);
   tr.appendChild(tdOption);
@@ -51,7 +50,7 @@ function toggleSort(e) {
   }
 }
 
-// TODO: transform row into inputs
+// TODO: implement click listener: transform row tds into inputs, need cancel/save/delete buttons, 
 function enableRowEdit(e) {
   e.target.firstElementChild.textContent = 'Save'; // remap edit to save
 
@@ -81,55 +80,21 @@ document.getElementById('btn-theme').addEventListener('click', () => {
 
 // onclick: toggle column sort |TODO: add asc/desc sort logic
 const sortButtons = ['btn-name', 'btn-uri', 'btn-size', 'btn-seeders', 'btn-leechers'];
-for (let i = 0; i < sortButtons.length; i++) {
+for (let i = 0; i < sortButtons.length; ++i) {
   document.getElementById(sortButtons[i]).addEventListener('click', toggleSort);
 }
 
-// onclick: remove non-empty input fields |TODO: fix invalidation styling in this scenario
+// onclick: remove non-empty input fields |TODO: type="reset", fix invalidation styling in this scenario
 document.getElementById('btn-clear').addEventListener('click', () => {
   const torrentNames = ['name', 'uri', 'size', 'seeders', 'leechers'];
   const torrentForm = document.forms['torrent-form'];
 
-  for (let i = 0; i < torrentNames.length; i++) {
+  for (let i = 0; i < torrentNames.length; ++i) {
     if (torrentForm[torrentNames[i]].value !== '') torrentForm[torrentNames[i]].value = '';
   }
 });
 
-/*// onclick: mimic user and add test rows 
-document.getElementById('user-test').addEventListener('click', () => {
-  const torrentForm = document.forms['torrent-form'];
-  const numNewRows = 10;
-  
-  for (let i = 0; i < numNewRows; i++) {
-    torrentForm['name'].value = i;
-    torrentForm['uri'].value = i;
-    torrentForm['size'].value = i;
-    torrentForm['seeders'].value = i;
-    torrentForm['leechers'].value = i;
-    document.getElementById('btn-submit').click();
-  }
-});*/
-
 document.getElementById('json-test').addEventListener('click', () => {
-  /*const lazyTorrent = [
-  {
-    0: "",
-    1: "",
-    2: "",
-    3: "",
-    4: ""
-  }
-  ];
-  const testTorrent = [
-    {
-      name: "test",
-      uri: "test.test.com",
-      size: 12345,
-      seeders: 123,
-      leechers:123
-    }
-  ];*/
-
   const testTorrents = [
     {
       name: "test",
@@ -149,22 +114,20 @@ document.getElementById('json-test').addEventListener('click', () => {
   populateTable(testTorrents);
 });
 
-// onsubmit: add row from JSON
-document.getElementById('user-test').addEventListener('click', () => {
-  const inputsArray = [];
-  const inputs = document.querySelectorAll('#torrent-tr input');
-  for (let i = 0; i < inputs.length; ++i){
-    inputsArray.push(inputs[i].value);
-  }
-  const testTorrents = {...inputsArray};
-  console.log(testTorrents);
-  populateTable(testTorrents);
-  /*const inputs = document.querySelectorAll('#torrent-tr input');
-  const temp = {1:"", 2:"", 3:"", 4:"", 5:""};
-  let i = 0;
-  Object.keys(temp).forEach( (key)=> {temp[key] = inputs[i].value; i++;} );
-  console.log(temp);
-  populateTable(temp);*/
+// onsubmit: add row from inputs
+document.getElementById('torrent-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const torrentJson = [{name:'', uri:'', size:'', seeders:'', leechers:''}];
+  const torrentInputs = document.querySelectorAll('#torrent-tr input');
+
+  torrentJson[0].name = torrentInputs[0].value;
+  torrentJson[0].uri = torrentInputs[1].value;
+  torrentJson[0].size = torrentInputs[2].value;
+  torrentJson[0].seeders = torrentInputs[3].value;
+  torrentJson[0].leechers = torrentInputs[4].value;
+
+  populateTable(torrentJson);
 });
 
 // TODO: consider using named functions with addEventListener
