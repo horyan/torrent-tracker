@@ -1,3 +1,7 @@
+tbody input {
+  background-color: #D4EBD0;
+}
+
 input {
   width: 100%;
   box-sizing: border-box;

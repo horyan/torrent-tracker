@@ -72,7 +72,15 @@ function toggleSort(e){
 
 function enableEdit(e){
   // TODO: transform row tds into inputs
-  //
+  for (let i = 0; i < 5; ++i){
+    const inputVal = e.target.parentNode.parentNode.children[i].textContent;
+    const inputEle = document.createElement('input');
+    inputEle.setAttribute('value', inputVal);
+    const tdEle = document.createElement('td');
+    tdEle.appendChild(inputEle);
+    e.target.parentNode.parentNode.children[i].replaceWith(tdEle);
+    console.log(i);
+  }
 
   e.target.textContent = 'Save'; // remap edit to save
   e.target.removeEventListener('click', enableEdit);
