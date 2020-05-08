@@ -71,7 +71,28 @@ function toggleSort(e){
 
 
 function enableEdit(e){
-  // TODO: transform row tds into inputs
+  const row = e.target.parentNode.parentNode; // store row for cancel selection
+
+  // popoulate/remap buttons
+  e.target.textContent = 'Save'; // remap edit to save
+  e.target.removeEventListener('click', enableEdit);
+  // TODO 5: e.target.addEventListener('click', saveEdit); // inside saveEdit, remap save back to Edit
+
+  const cancel = document.createElement('button');
+  cancel.setAttribute('type', 'button');
+  cancel.textContent = 'Cancel';
+  cancel.addEventListener('click', cancelEdit);
+
+  e.target.parentNode.insertBefore(cancel, e.target); // insert cancel before save button
+  
+  // allow 1 row edit at a time, cancel any edits
+  row.classList.toggle('edit-mode'); // no row is being editted (MOVE DOWN AFTER CANCEL-BTN TEST)
+  if (document.getElementsByClassName('edit-mode').length > 0){
+    const editRow = document.getElementsByClassName('edit-mode')[0];
+    editRow.childNodes[editRow.childElementCount-1].firstElementChild.click();
+  }
+
+  // transform row tds into inputs
   for (let i = 0; i < 5; ++i){
     const inputVal = e.target.parentNode.parentNode.children[i].textContent;
     const inputEle = document.createElement('input');
@@ -79,39 +100,26 @@ function enableEdit(e){
     const tdEle = document.createElement('td');
     tdEle.appendChild(inputEle);
     e.target.parentNode.parentNode.children[i].replaceWith(tdEle);
-    console.log(i);
   }
 
-  e.target.textContent = 'Save'; // remap edit to save
-  e.target.removeEventListener('click', enableEdit);
-  //e.target.addEventListener('click', saveEdit)
-
-  const cancel = document.createElement('button');
-  cancel.setAttribute('type', 'button');
-  cancel.textContent = 'Cancel';
-
-  e.target.parentNode.insertBefore(cancel, e.target); // insert cancel before save button
-  //e.target.addEventListener('click', disableEdit);
 }
 
 
 function cancelEdit(){
-  // TODO: remove cancel button
+  // TODO 3: remove cancel button
+  // strip edit-mode id
   // remap save textContent/event handler callback: Edit/disableEdit
+  console.log('cancel clicked');
 }
 
 
 function saveEdit(){
-// TODO: store input values into td.textContent
+// TODO 6: store input values into td.textContent
+// strip edit-mode id
 // remove input element
 // cancelEdit()
 }
 
-
-function disableRowEdit(e){
-  e.target.removeChild(e.target.firstElementChild); // remove exposed cancel button
-  e.target.firstElementChild.textContent = 'Edit'; // remap save to edit
-}
 
 /* Operators */
 
