@@ -72,25 +72,21 @@ function toggleSort(e){
 
 function enableEdit(e){
   // cancel any other rows in edit mode
-  // TODO: call cancel handler inside if statement and pass editRow ele 
   if (document.getElementsByClassName('edit-mode').length > 0){
     const editRow = document.getElementsByClassName('edit-mode')[0];
     editRow.childNodes[editRow.childElementCount-1].firstElementChild.click();
   }
 
-
-  const row = e.target.parentNode.parentNode; // only store if entering edit mode
+  const row = e.target.parentNode.parentNode; // only store if no other row is in edit mode
   row.classList.toggle('edit-mode'); // set indicator
 
-  // popoulate/remap buttons
   e.target.textContent = 'Save'; // remap edit to save
   e.target.removeEventListener('click', enableEdit);
-  // TODO 5: e.target.addEventListener('click', saveEdit); // inside saveEdit, remap save back to Edit
+  // TODO 2: e.target.addEventListener('click', saveEdit); // MUST pass back final input values  
 
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
-  // pass original row data to cancelEdit (AFTER if-cancel is clicked, BEFORE populating cancel button to avoid millisecond glitch when it hasn't stored any original data yet)
-  // pass entire row 
+  // pass original row (AFTER if-cancel is clicked, BEFORE populating cancel so it has data)
   cancel.addEventListener('click', ()=>{cancelEdit(row);});
   cancel.textContent = 'Cancel';
   
@@ -109,20 +105,21 @@ function enableEdit(e){
 
 
 function cancelEdit(torrentArchive){
-  // TODO 3: remove cancel button
-  // strip edit-mode id
-  // remap save textContent/event handler callback: Edit/disableEdit
+  // TODO 1: remove cancel button
+  // edit-mode class and buttons were never popoulated/remapped in torrentArchive
   console.log(torrentArchive);
+  // parse id from torrentArchive, grab element with that id and replacewith torrentArchive
 }
 
 
 function saveEdit(){
-// TODO 6: store input values into td.textContent
-// strip edit-mode id
-// remove input element
-// cancelEdit()
+// TODO 3: store input values into created td.textContent/value
+  // strip edit-mode class
+  // remap save back to edit
+  // remove cancel button
+  // replace input elements with row of tds
+// TODO 4: eventually make cancelEdit() modular (separate enableEdit chunk for allowSingleEdit)
 }
-
 
 /* Operators */
 
