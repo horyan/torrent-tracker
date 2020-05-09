@@ -1,7 +1,7 @@
 /* Declarations */
 
-function getFormInput(){
-  const torrentInputs = document.querySelectorAll('#torrent-input input');
+function getFormInput(selector){
+  const torrentInputs = document.querySelectorAll(`${selector}`);
   const torrent = [{}];
 
   torrent[0].name = torrentInputs[0].value;
@@ -40,9 +40,10 @@ function constructRowTemplate(torrent, index){
   const deleteBtn = document.createElement('button');
   
   editBtn.textContent = 'Edit';
-  editBtn.setAttribute('type', 'button'); // delete btn isn't firing the same submit issue?
+  editBtn.setAttribute('type', 'button'); // avoid firing as submit
   editBtn.addEventListener('click', enableEdit);
   deleteBtn.textContent = 'Delete';
+  deleteBtn.setAttribute('type', 'button');
   deleteBtn.addEventListener('click', deleteRow);
   
   tdOption.appendChild(editBtn);
@@ -72,20 +73,30 @@ function toggleSort(e){
 
 function enableEdit(e){
   // cancel any other rows in edit mode
-  if (document.getElementsByClassName('edit-mode').length > 0){
+  if (document.getElementsByClassName('edit-mode')[0] != undefined && document.getElementsByClassName('edit-mode')[0].childElementCount === 6){
     const editRow = document.getElementsByClassName('edit-mode')[0];
     editRow.childNodes[editRow.childElementCount-1].firstElementChild.click();
   }
 
-  const row = e.target.parentNode.parentNode; // only store if no other row is in edit mode
-  row.classList.toggle('edit-mode'); // set indicator
+  // store values of the row that clicked edit
+  const initialInputs = e.target.parentNode.parentNode;
+  const row = document.createElement('tr');
+  const id = initialInputs.getAttribute('id');
+  row.setAttribute('id', id);
+  for (let i = 0; i < initialInputs.childElementCount; ++i){
+    const temp = document.createElement('td');
+    temp.innerHTML = initialInputs.children[i].innerHTML;
+    row.appendChild(temp);
+  }
 
+  e.target.parentNode.parentNode.classList.add('edit-mode'); // set indicator
   e.target.textContent = 'Save'; // remap edit to save
   e.target.removeEventListener('click', enableEdit);
   // TODO 2: e.target.addEventListener('click', saveEdit); // MUST pass back final input values  
 
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
+
   // pass original row (AFTER if-cancel is clicked, BEFORE populating cancel so it has data)
   cancel.addEventListener('click', ()=>{cancelEdit(row);});
   cancel.textContent = 'Cancel';
@@ -105,10 +116,17 @@ function enableEdit(e){
 
 
 function cancelEdit(torrentArchive){
-  // TODO 1: remove cancel button
-  // edit-mode class and buttons were never popoulated/remapped in torrentArchive
-  console.log(torrentArchive);
-  // parse id from torrentArchive, grab element with that id and replacewith torrentArchive
+  //TODO
+  const id = torrentArchive.getAttribute('id');
+  const initialRow = document.querySelector(`#${id}`);
+  initialRow.classList.remove('edit-mode');
+  console.log({torrentArchive});
+
+  // re-add edit listener
+  torrentArchive.children[torrentArchive.children.length-1].firstElementChild.addEventListener('click', enableEdit);
+  // TODO: NOT SURE WHY WE HAVE TO RE-ADD HANDLER FOR THIS
+  torrentArchive.children[torrentArchive.children.length-1].lastElementChild.addEventListener('click', deleteRow);
+  initialRow.replaceWith(torrentArchive);
 }
 
 
@@ -127,7 +145,7 @@ function saveEdit(){
 document.getElementById('torrent-form').addEventListener('submit', (e) =>{
   e.preventDefault();
 
-  populateTable(getFormInput());
+  populateTable(getFormInput('#torrent-input input'));
 
   document.getElementById('clear-btn').click(); // clear inputs
 });
