@@ -85,14 +85,15 @@ function enableEdit(e){
   row.setAttribute('id', id);
   for (let i = 0; i < initialInputs.childElementCount; ++i){
     const temp = document.createElement('td');
-    temp.innerHTML = initialInputs.children[i].innerHTML;
+    temp.innerHTML = initialInputs.children[i].innerHTML; // maybe textContent until last td?
     row.appendChild(temp);
   }
 
   e.target.parentNode.parentNode.classList.add('edit-mode'); // set indicator
   e.target.textContent = 'Save'; // remap edit to save
   e.target.removeEventListener('click', enableEdit);
-  // TODO 2: e.target.addEventListener('click', saveEdit); // MUST pass back final input values  
+
+  e.target.addEventListener('click', saveEdit);
 
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
@@ -116,27 +117,50 @@ function enableEdit(e){
 
 
 function cancelEdit(torrentArchive){
-  //TODO
+  // prepare replacement row
   const id = torrentArchive.getAttribute('id');
   const initialRow = document.querySelector(`#${id}`);
   initialRow.classList.remove('edit-mode');
-  console.log({torrentArchive});
 
   // re-add edit listener
   torrentArchive.children[torrentArchive.children.length-1].firstElementChild.addEventListener('click', enableEdit);
-  // TODO: NOT SURE WHY WE HAVE TO RE-ADD HANDLER FOR THIS
+  // NOT SURE WHY WE HAVE TO RE-ADD HANDLER FOR THIS
   torrentArchive.children[torrentArchive.children.length-1].lastElementChild.addEventListener('click', deleteRow);
   initialRow.replaceWith(torrentArchive);
 }
 
 
-function saveEdit(){
-// TODO 3: store input values into created td.textContent/value
-  // strip edit-mode class
-  // remap save back to edit
-  // remove cancel button
-  // replace input elements with row of tds
-// TODO 4: eventually make cancelEdit() modular (separate enableEdit chunk for allowSingleEdit)
+function saveEdit(e){ // reduce duplicate code between delete, cancel functions
+  // replace row using final inputs (modify existing row instead later)
+  const finalInputs = e.target.parentNode.parentNode;
+  const row = document.createElement('tr');
+  const id = finalInputs.getAttribute('id');
+  row.setAttribute('id', id);
+
+  for (let i = 0; i < finalInputs.childElementCount-1; ++i){
+    const temp = document.createElement('td');
+    temp.textContent = finalInputs.children[i].children[0].value;
+    row.appendChild(temp);
+  }
+
+  // make buttons
+  const options = document.createElement('td');
+  // options.innerHTML = finalInputs.children[5].children[0].innerHTML; // Cancel text stored
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.setAttribute('type', 'button');
+  editBtn.addEventListener('click', enableEdit);
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.setAttribute('type', 'button');
+  deleteBtn.addEventListener('click', deleteRow);
+  options.appendChild(editBtn);
+  options.appendChild(deleteBtn);
+  row.appendChild(options);
+  console.log({row});
+  finalInputs.replaceWith(row);
+  
+  // TODO: eventually make cancelEdit() modular (separate enableEdit chunk for allowSingleEdit)
 }
 
 /* Operators */
@@ -161,7 +185,7 @@ document.getElementById('theme-btn').addEventListener('click', () =>{
 });
 
 
-// sort table |TODO: add asc/desc sort logic
+// sort table |TODO 1: add asc/desc sort logic
 const sortButtons = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
 for (let i = 0; i < sortButtons.length; ++i){
   document.getElementById(sortButtons[i]).addEventListener('click', toggleSort);
