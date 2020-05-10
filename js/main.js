@@ -1,4 +1,3 @@
-//const unsortedRows = [];
 loadSortIcons();
 
 /* Declarations */
@@ -17,19 +16,60 @@ function getFormInput(selector){
 }
 
 
+function resetIcons(column, target){
+  switch(column) {
+    case 0:
+      document.getElementById(target[1]).innerHTML = '&laquo;';
+      document.getElementById(target[2]).innerHTML = '&laquo;';
+      document.getElementById(target[3]).innerHTML = '&laquo;';
+      document.getElementById(target[4]).innerHTML = '&laquo;';
+      break;
+    case 1:
+      document.getElementById(target[0]).innerHTML = '&laquo;';
+      document.getElementById(target[2]).innerHTML = '&laquo;';
+      document.getElementById(target[3]).innerHTML = '&laquo;';
+      document.getElementById(target[4]).innerHTML = '&laquo;';
+      break;
+    case 2:
+      document.getElementById(target[0]).innerHTML = '&laquo;';
+      document.getElementById(target[1]).innerHTML = '&laquo;';
+      document.getElementById(target[3]).innerHTML = '&laquo;';
+      document.getElementById(target[4]).innerHTML = '&laquo;';
+      break;
+    case 3:
+      document.getElementById(target[0]).innerHTML = '&laquo;';
+      document.getElementById(target[1]).innerHTML = '&laquo;';
+      document.getElementById(target[2]).innerHTML = '&laquo;';
+      document.getElementById(target[4]).innerHTML = '&laquo;';
+      break;
+    case 4:
+      document.getElementById(target[0]).innerHTML = '&laquo;';
+      document.getElementById(target[1]).innerHTML = '&laquo;';
+      document.getElementById(target[2]).innerHTML = '&laquo;';
+      document.getElementById(target[3]).innerHTML = '&laquo;';
+      break;
+  }
+}
+
+
 function loadSortIcons(){
   // add event handlers to sort buttons
-  const sortButtons = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
-  for (let i = 0; i < sortButtons.length; ++i){
-    document.getElementById(sortButtons[i]).addEventListener('click', (e) =>{
-      if (e.target.innerHTML === '\u00AB'){
-        e.target.innerHTML = '&and;';
+  const sortBtns = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
+  for (let i = 0; i < sortBtns.length; ++i){
+    document.getElementById(sortBtns[i]).addEventListener('click', (e) =>{
+      let curBtn = e.target;
+      const col = e.target.parentNode.cellIndex;
+      if (curBtn.innerHTML === '\u00AB'){
+        curBtn.innerHTML = '&and;';
+        resetIcons(col, sortBtns);
         sortAsc(e);
-      } else if (e.target.innerHTML === '\u2227'){
-        e.target.innerHTML = '&or;';
+      } else if (curBtn.innerHTML === '\u2227'){
+        curBtn.innerHTML = '&or;';
+        resetIcons(col, sortBtns);
         sortDesc(e);
-      } else{
-        e.target.innerHTML = '&laquo;';
+      } else if (curBtn.innerHTML === '\u2228'){
+        curBtn.innerHTML = '&laquo;';
+        resetIcons(col, sortBtns);
         sortInitial();
       }
     });
@@ -42,7 +82,6 @@ function populateTable(torrents){
   let i = 0, j = document.getElementsByTagName('tr').length-1; // existing rows in tbody
   for (i, j; i < torrents.length; ++i, ++j){
     const row = constructRowTemplate(torrents[i], j);
-    //unsortedRows.push(row);
     tableBody.appendChild(row); // insert row
   }
 }
@@ -86,7 +125,6 @@ function deleteRow(e){
 
 
 function sortInitial(){
-  // re-order by numerical row id
   // w3 example as starting point
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
@@ -115,21 +153,41 @@ function sortAsc(e){
   // w3 example as starting point
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
-  while (switching) {
-    switching = false;
-    rows = document.getElementById('torrent-data').children;
-    for (i = 0; i < rows.length-1; ++i){
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName('td')[col];
-      y = rows[i+1].getElementsByTagName('td')[col];
-      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
-        shouldSwitch = true;
-        break;
+  if (col === 3 || col === 4){
+    while (switching) {
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (Number(x.innerHTML) > Number(y.innerHTML)){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
       }
     }
-    if (shouldSwitch){
-      rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
-      switching = true;
+  } else{
+    while (switching) {
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
+      }
     }
   }
 }
@@ -140,21 +198,41 @@ function sortDesc(e){
   // w3 example as starting point
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
-  while (switching) {
-    switching = false;
-    rows = document.getElementById('torrent-data').children;
-    for (i = 0; i < rows.length-1; ++i){
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName('td')[col];
-      y = rows[i+1].getElementsByTagName('td')[col];
-      if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
-        shouldSwitch = true;
-        break;
+  if (col === 3 || col === 4){
+    while (switching) {
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (Number(x.innerHTML) < Number(y.innerHTML)){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
       }
     }
-    if (shouldSwitch){
-      rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
-      switching = true;
+  } else{
+    while (switching) {
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
+      }
     }
   }
 }
@@ -234,7 +312,6 @@ function saveEdit(e){ // reduce duplicate code between delete, cancel functions
 
   // make buttons
   const options = document.createElement('td');
-  // options.innerHTML = finalInputs.children[5].children[0].innerHTML; // Cancel text stored
   const editBtn = document.createElement('button');
   editBtn.textContent = 'Edit';
   editBtn.setAttribute('type', 'button');
@@ -280,11 +357,11 @@ document.getElementById('json-test').addEventListener('click', () =>{
 
   for (i, j; i < 10; ++i, ++j){
     const temp = {
-                  name: `torrent-${Math.floor(Math.random()*10)}`,
-                  uri: `example-${Math.floor(Math.random()*10)}.torrents.com`,
-                  size: `${Math.floor(Math.random()*10)} GiB`,
-                  seeders: `${Math.floor(Math.random()*10)}`,
-                  leechers: `${Math.floor(Math.random()*10)}`
+                  name: `torrent-${Math.floor(Math.random()*20)}`,
+                  uri: `example-${Math.floor(Math.random()*20)}.torrents.com`,
+                  size: `${Math.floor(Math.random()*20)} GiB`,
+                  seeders: `${Math.floor(Math.random()*20)}`,
+                  leechers: `${Math.floor(Math.random()*20)}`
     };
     dynamicTorrents.push(temp);
   }
