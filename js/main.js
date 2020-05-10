@@ -17,7 +17,7 @@ function getFormInput(selector){
 
 
 function resetIcons(column, target){
-  switch(column) {
+  switch(column){
     case 0:
       document.getElementById(target[1]).innerHTML = '&laquo;';
       document.getElementById(target[2]).innerHTML = '&laquo;';
@@ -258,9 +258,8 @@ function enableEdit(e){
 
   e.target.parentNode.parentNode.classList.add('edit-mode'); // set indicator
   e.target.textContent = 'Save'; // remap edit to save
-  e.target.removeEventListener('click', enableEdit);
-
-  e.target.addEventListener('click', saveEdit);
+  e.target.removeEventListener('click', enableEdit); //rh
+  e.target.addEventListener('click', saveEdit); //rh
 
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
@@ -276,6 +275,17 @@ function enableEdit(e){
     const inputVal = e.target.parentNode.parentNode.children[i].textContent;
     const inputEle = document.createElement('input');
     inputEle.setAttribute('value', inputVal);
+    // re-add pattern attribute
+    switch(i){
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      default:
+        inputEle.setAttribute('pattern', '[1-9]\d*|0');
+    }
     const tdEle = document.createElement('td');
     tdEle.appendChild(inputEle);
     e.target.parentNode.parentNode.children[i].replaceWith(tdEle);
@@ -325,18 +335,52 @@ function saveEdit(e){ // reduce duplicate code between delete, cancel functions
   row.appendChild(options);
   finalInputs.replaceWith(row);
   
+  // TODO: input is being validated but Save bypasses (not 'submitting')
+
   // refactor and use cancelEdit(), enableEdit > allowSingleEdit
 }
 
 /* Operators */
 
-// add new row
-document.getElementById('torrent-form').addEventListener('submit', (e) =>{
+document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   e.preventDefault();
 
-  populateTable(getFormInput('#torrent-input input'));
+  // if submitter is add-btn
+  if (e.submitter.getAttribute('id') === 'add-btn'){
+    populateTable(getFormInput('#torrent-input input'));
+    document.getElementById('clear-btn').click(); // clear inputs
+  } else {
+    /* below didn't enforce validate on "Save"
+    console.log('save');
+    // should refactor to modify existing row instead
+    const finalInputs = e.target.parentNode.parentNode;
+    const row = document.createElement('tr');
+    const id = finalInputs.getAttribute('id');
+    row.setAttribute('id', id);
 
-  document.getElementById('clear-btn').click(); // clear inputs
+    for (let i = 0; i < finalInputs.childElementCount-1; ++i){
+      const temp = document.createElement('td');
+      temp.textContent = finalInputs.children[i].children[0].value;
+      row.appendChild(temp);
+    }
+
+    // make buttons
+    const options = document.createElement('td');
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.setAttribute('type', 'button');
+    editBtn.addEventListener('click', enableEdit);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.setAttribute('type', 'button');
+    deleteBtn.addEventListener('click', deleteRow);
+    options.appendChild(editBtn);
+    options.appendChild(deleteBtn);
+    row.appendChild(options);
+    finalInputs.replaceWith(row);
+    
+    // refactor and use cancelEdit(), enableEdit > allowSingleEdit
+  */}
 });
 
 
