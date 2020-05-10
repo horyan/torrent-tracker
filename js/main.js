@@ -2,6 +2,22 @@ loadSortIcons();
 
 /* Declarations */
 
+const request = new XMLHttpRequest();
+
+function getFromApi(){
+
+  request.open("GET", "https://randomuser.me/api/?results=10");
+  request.onreadystatechange = () => {
+    console.log(request.response);
+  }
+  request.send();
+
+  
+
+}
+
+
+
 function getFormInput(selector){
   const torrentInputs = document.querySelectorAll(`${selector}`);
   const torrent = [{}];
