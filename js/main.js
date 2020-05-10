@@ -1,3 +1,6 @@
+//const unsortedRows = [];
+loadSortIcons();
+
 /* Declarations */
 
 function getFormInput(selector){
@@ -14,18 +17,40 @@ function getFormInput(selector){
 }
 
 
+function loadSortIcons(){
+  // add event handlers to sort buttons
+  const sortButtons = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
+  for (let i = 0; i < sortButtons.length; ++i){
+    document.getElementById(sortButtons[i]).addEventListener('click', (e) =>{
+      if (e.target.innerHTML === '\u00AB'){
+        e.target.innerHTML = '&and;';
+        sortAsc(e);
+      } else if (e.target.innerHTML === '\u2227'){
+        e.target.innerHTML = '&or;';
+        sortDesc(e);
+      } else{
+        e.target.innerHTML = '&laquo;';
+        sortInitial();
+      }
+    });
+  }
+}
+
+
 function populateTable(torrents){
   const tableBody = document.getElementById('torrent-data');
   let i = 0, j = document.getElementsByTagName('tr').length-1; // existing rows in tbody
   for (i, j; i < torrents.length; ++i, ++j){
-    tableBody.appendChild(constructRowTemplate(torrents[i], j)); // insert row
+    const row = constructRowTemplate(torrents[i], j);
+    //unsortedRows.push(row);
+    tableBody.appendChild(row); // insert row
   }
 }
 
 
 function constructRowTemplate(torrent, index){
   const tr = document.createElement('tr');
-  tr.setAttribute('id', `row-${index}`);
+  tr.setAttribute('id', `${index}`);
 
   // convert into array of torrent's values (iterable, has length)
   const torrentValues = Object.values(torrent);
@@ -55,18 +80,82 @@ function constructRowTemplate(torrent, index){
 
 
 function deleteRow(e){
-  const userRow = e.target.parentElement.parentElement; // TODO: target matching row-id in the future
+  const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
 }
 
 
-function toggleSort(e){
-  if (e.target.innerHTML === '\u00AB'){
-    e.target.innerHTML = '&and;';
-  } else if (e.target.innerHTML === '\u2227'){
-    e.target.innerHTML = '&or;';
-  } else{
-    e.target.innerHTML = '&laquo;';
+function sortInitial(){
+  // re-order by numerical row id
+  // w3 example as starting point
+  let rows, switching, i, x, y, shouldSwitch;
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = document.getElementById('torrent-data').children;
+    for (i = 0; i < rows.length-1; ++i){
+      shouldSwitch = false;
+      x = rows[i].getAttribute('id');
+      y = rows[i+1].getAttribute('id');
+      if (Number(x) > Number(y)){
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch){
+      rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
+
+function sortAsc(e){
+  const col = e.target.parentNode.cellIndex;
+  // w3 example as starting point
+  let rows, switching, i, x, y, shouldSwitch;
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = document.getElementById('torrent-data').children;
+    for (i = 0; i < rows.length-1; ++i){
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName('td')[col];
+      y = rows[i+1].getElementsByTagName('td')[col];
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch){
+      rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
+
+function sortDesc(e){
+  const col = e.target.parentNode.cellIndex;
+  // w3 example as starting point
+  let rows, switching, i, x, y, shouldSwitch;
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = document.getElementById('torrent-data').children;
+    for (i = 0; i < rows.length-1; ++i){
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName('td')[col];
+      y = rows[i+1].getElementsByTagName('td')[col];
+      if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch){
+      rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+      switching = true;
+    }
   }
 }
 
@@ -98,7 +187,7 @@ function enableEdit(e){
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
 
-  // pass original row (AFTER if-cancel is clicked, BEFORE populating cancel so it has data)
+  // pass original row BEFORE populating cancel so it has data
   cancel.addEventListener('click', ()=>{cancelEdit(row);});
   cancel.textContent = 'Cancel';
   
@@ -119,19 +208,19 @@ function enableEdit(e){
 function cancelEdit(torrentArchive){
   // prepare replacement row
   const id = torrentArchive.getAttribute('id');
-  const initialRow = document.querySelector(`#${id}`);
+  const initialRow = document.getElementById(id);
   initialRow.classList.remove('edit-mode');
 
   // re-add edit listener
   torrentArchive.children[torrentArchive.children.length-1].firstElementChild.addEventListener('click', enableEdit);
-  // NOT SURE WHY WE HAVE TO RE-ADD HANDLER FOR THIS
+  // breaks without re-add (why?)
   torrentArchive.children[torrentArchive.children.length-1].lastElementChild.addEventListener('click', deleteRow);
   initialRow.replaceWith(torrentArchive);
 }
 
 
 function saveEdit(e){ // reduce duplicate code between delete, cancel functions
-  // replace row using final inputs (modify existing row instead later)
+  // should refactor to modify existing row instead
   const finalInputs = e.target.parentNode.parentNode;
   const row = document.createElement('tr');
   const id = finalInputs.getAttribute('id');
@@ -157,10 +246,9 @@ function saveEdit(e){ // reduce duplicate code between delete, cancel functions
   options.appendChild(editBtn);
   options.appendChild(deleteBtn);
   row.appendChild(options);
-  console.log({row});
   finalInputs.replaceWith(row);
   
-  // TODO: eventually make cancelEdit() modular (separate enableEdit chunk for allowSingleEdit)
+  // refactor and use cancelEdit(), enableEdit > allowSingleEdit
 }
 
 /* Operators */
@@ -185,13 +273,6 @@ document.getElementById('theme-btn').addEventListener('click', () =>{
 });
 
 
-// sort table |TODO 1: add asc/desc sort logic
-const sortButtons = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
-for (let i = 0; i < sortButtons.length; ++i){
-  document.getElementById(sortButtons[i]).addEventListener('click', toggleSort);
-}
-
-
 // TEST FEATURE: add 10 rows from sample JSON
 document.getElementById('json-test').addEventListener('click', () =>{
   const dynamicTorrents = [];
@@ -199,11 +280,11 @@ document.getElementById('json-test').addEventListener('click', () =>{
 
   for (i, j; i < 10; ++i, ++j){
     const temp = {
-                  name: `torrent-${j}`,
-                  uri: `example-${j}.torrents.com`,
-                  size: `${j} GiB`,
-                  seeders: `${j}`,
-                  leechers: `${j}`
+                  name: `torrent-${Math.floor(Math.random()*10)}`,
+                  uri: `example-${Math.floor(Math.random()*10)}.torrents.com`,
+                  size: `${Math.floor(Math.random()*10)} GiB`,
+                  seeders: `${Math.floor(Math.random()*10)}`,
+                  leechers: `${Math.floor(Math.random()*10)}`
     };
     dynamicTorrents.push(temp);
   }
