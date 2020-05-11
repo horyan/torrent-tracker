@@ -3,7 +3,7 @@ loadSortIcons();
 /* Declarations */
 
 function getFormInput(selector){
-  const torrentInputs = document.querySelectorAll(`${selector}`);
+  const torrentInputs = document.querySelectorAll(`#${selector}`);
   const torrent = [{}];
 
   torrent[0].name = torrentInputs[0].value;
@@ -22,6 +22,7 @@ function resetIcons(column, target){
       continue;
     } else {
       document.getElementById(target[i]).innerHTML = '&laquo;';
+    }
   }
 }
 
@@ -63,13 +64,18 @@ function populateTable(torrents){
 
 function constructRowTemplate(torrent, index){
   const tr = document.createElement('tr');
-  tr.setAttribute('id', `${index}`);
+  tr.setAttribute('id', `row-${index}`);
 
   // convert into array of torrent's values (iterable, has length)
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
     const td = document.createElement('td');
+    // condition for span insertion
+    if (i == 2){
+      td.innerHTML = `${torrentValues[i]}<span>MB</span>`;
+    } else{
     td.textContent = torrentValues[i];
+    }
     tr.appendChild(td);
   }
 
@@ -109,7 +115,7 @@ function sortInitial(){
       shouldSwitch = false;
       x = rows[i].getAttribute('id');
       y = rows[i+1].getAttribute('id');
-      if (Number(x) > Number(y)){
+      if (Number(x.slice(4)) > Number(y.slice(4))){ // exclude 'row-' prepend
         shouldSwitch = true;
         break;
       }
@@ -127,7 +133,7 @@ function sortAsc(e){
   // w3 example as starting point
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
-  if (col === 3 || col === 4){
+  if (col === 0 || col === 1){
     while (switching) {
       switching = false;
       rows = document.getElementById('torrent-data').children;
@@ -135,7 +141,7 @@ function sortAsc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML) > Number(y.innerHTML)){
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
           shouldSwitch = true;
           break;
         }
@@ -145,7 +151,25 @@ function sortAsc(e){
         switching = true;
       }
     }
-  } else{
+  } else if (col === 2){
+    while (switching){
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (Number(x.innerHTML.slice(0, x.innerHTML.length-15)) > Number(y.innerHTML.slice(0, y.innerHTML.length-15))){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
+      }
+    }
+  } else {
     while (switching) {
       switching = false;
       rows = document.getElementById('torrent-data').children;
@@ -153,7 +177,7 @@ function sortAsc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+        if (Number(x.innerHTML) > Number(y.innerHTML)){
           shouldSwitch = true;
           break;
         }
@@ -172,7 +196,7 @@ function sortDesc(e){
   // w3 example as starting point
   let rows, switching, i, x, y, shouldSwitch;
   switching = true;
-  if (col === 3 || col === 4){
+  if (col === 0 || col === 1){
     while (switching) {
       switching = false;
       rows = document.getElementById('torrent-data').children;
@@ -180,7 +204,7 @@ function sortDesc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML) < Number(y.innerHTML)){
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
           shouldSwitch = true;
           break;
         }
@@ -190,7 +214,25 @@ function sortDesc(e){
         switching = true;
       }
     }
-  } else{
+  } else if (col === 2){
+    while (switching){
+      switching = false;
+      rows = document.getElementById('torrent-data').children;
+      for (i = 0; i < rows.length-1; ++i){
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName('td')[col];
+        y = rows[i+1].getElementsByTagName('td')[col];
+        if (Number(x.innerHTML.slice(0, x.innerHTML.length-15)) < Number(y.innerHTML.slice(0, y.innerHTML.length-15))){
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch){
+        rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+        switching = true;
+      }
+    }
+  } else {
     while (switching) {
       switching = false;
       rows = document.getElementById('torrent-data').children;
@@ -198,7 +240,7 @@ function sortDesc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+        if (Number(x.innerHTML) < Number(y.innerHTML)){
           shouldSwitch = true;
           break;
         }
@@ -324,37 +366,8 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
     populateTable(getFormInput('#torrent-input input'));
     document.getElementById('clear-btn').click(); // clear inputs
   } else {
-    /* below didn't enforce validate on "Save"
-    console.log('save');
-    // should refactor to modify existing row instead
-    const finalInputs = e.target.parentNode.parentNode;
-    const row = document.createElement('tr');
-    const id = finalInputs.getAttribute('id');
-    row.setAttribute('id', id);
-
-    for (let i = 0; i < finalInputs.childElementCount-1; ++i){
-      const temp = document.createElement('td');
-      temp.textContent = finalInputs.children[i].children[0].value;
-      row.appendChild(temp);
-    }
-
-    // make buttons
-    const options = document.createElement('td');
-    const editBtn = document.createElement('button');
-    editBtn.textContent = 'Edit';
-    editBtn.setAttribute('type', 'button');
-    editBtn.addEventListener('click', enableEdit);
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.setAttribute('type', 'button');
-    deleteBtn.addEventListener('click', deleteRow);
-    options.appendChild(editBtn);
-    options.appendChild(deleteBtn);
-    row.appendChild(options);
-    finalInputs.replaceWith(row);
-    
-    // refactor and use cancelEdit(), enableEdit > allowSingleEdit
-  */}
+    //below didn't enforce validate on "Save"
+  }
 });
 
 
@@ -377,7 +390,7 @@ document.getElementById('json-test').addEventListener('click', () =>{
     const temp = {
                   name: `torrent-${Math.floor(Math.random()*20)}`,
                   uri: `example-${Math.floor(Math.random()*20)}.torrents.com`,
-                  size: `${Math.floor(Math.random()*20)} GiB`,
+                  size: `${Math.floor(Math.random()*20)}`,
                   seeders: `${Math.floor(Math.random()*20)}`,
                   leechers: `${Math.floor(Math.random()*20)}`
     };
