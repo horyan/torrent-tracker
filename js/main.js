@@ -17,37 +17,11 @@ function getFormInput(selector){
 
 
 function resetIcons(column, target){
-  switch(column){
-    case 0:
-      document.getElementById(target[1]).innerHTML = '&laquo;';
-      document.getElementById(target[2]).innerHTML = '&laquo;';
-      document.getElementById(target[3]).innerHTML = '&laquo;';
-      document.getElementById(target[4]).innerHTML = '&laquo;';
-      break;
-    case 1:
-      document.getElementById(target[0]).innerHTML = '&laquo;';
-      document.getElementById(target[2]).innerHTML = '&laquo;';
-      document.getElementById(target[3]).innerHTML = '&laquo;';
-      document.getElementById(target[4]).innerHTML = '&laquo;';
-      break;
-    case 2:
-      document.getElementById(target[0]).innerHTML = '&laquo;';
-      document.getElementById(target[1]).innerHTML = '&laquo;';
-      document.getElementById(target[3]).innerHTML = '&laquo;';
-      document.getElementById(target[4]).innerHTML = '&laquo;';
-      break;
-    case 3:
-      document.getElementById(target[0]).innerHTML = '&laquo;';
-      document.getElementById(target[1]).innerHTML = '&laquo;';
-      document.getElementById(target[2]).innerHTML = '&laquo;';
-      document.getElementById(target[4]).innerHTML = '&laquo;';
-      break;
-    case 4:
-      document.getElementById(target[0]).innerHTML = '&laquo;';
-      document.getElementById(target[1]).innerHTML = '&laquo;';
-      document.getElementById(target[2]).innerHTML = '&laquo;';
-      document.getElementById(target[3]).innerHTML = '&laquo;';
-      break;
+  for (let i = 0; i < 5; ++i){
+    if (i === column){
+      continue;
+    } else {
+      document.getElementById(target[i]).innerHTML = '&laquo;';
   }
 }
 

@@ -50,16 +50,16 @@
                 <input id="name" name="name" type="text" placeholder="Enter.." required>
               </td>
               <td>
-                <input id="uri" name="uri" type="text" placeholder="Enter.." required>
+                <input id="uri" name="uri" type="text" placeholder="Enter.." pattern="(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})" required>
               </td>
               <td>
-                <input id="size" name="size" type="text" placeholder="Enter.." required>
+                <input id="size" name="size" type="number" min=1 placeholder="Enter.." required>
               </td>
               <td>
-                <input id="seeders" name="seeders" type="text" placeholder="Enter #.." pattern="[1-9]\d*|0" required>
+                <input id="seeders" name="seeders" type="number" min=0 placeholder="Enter #.." required>
               </td>
               <td>
-                <input id="leechers" name="leechers" type="text" placeholder="Enter #.." pattern="[1-9]\d*|0" required>
+                <input id="leechers" name="leechers" type="number" min=0 placeholder="Enter #.." required>
               </td>
               <td>
                 <button id="clear-btn" type="reset">Clear</button>
