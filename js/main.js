@@ -274,8 +274,8 @@ function enableEdit(e){
 
   e.target.parentNode.parentNode.classList.add('edit-mode'); // set indicator
   e.target.textContent = 'Save'; // remap edit to save
-  e.target.removeEventListener('click', enableEdit); //rh
-  e.target.addEventListener('click', saveEdit); //rh
+  e.target.removeEventListener('click', enableEdit);
+  e.target.addEventListener('click', saveEdit);
 
   const cancel = document.createElement('button');
   cancel.setAttribute('type', 'button');
@@ -290,17 +290,28 @@ function enableEdit(e){
   for (let i = 0; i < 5; ++i){
     const inputVal = e.target.parentNode.parentNode.children[i].textContent;
     const inputEle = document.createElement('input');
-    inputEle.setAttribute('value', inputVal);
     // re-add pattern attribute
     switch(i){
       case 0:
+        inputEle.setAttribute('type','text');
         break;
       case 1:
+        inputEle.setAttribute('type','text');
+        inputEle.setAttribute('pattern', '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'); // is regex working?
         break;
       case 2:
+        inputEle.setAttribute('type', 'number'); // TODO: enforce additional input[type="number"] validation
+        inputEle.setAttribute('min', '1');
         break;
       default:
-        inputEle.setAttribute('pattern', '[1-9]\d*|0');
+        inputEle.setAttribute('type','number'); // TODO: enforce additional input[type="number"] validation
+        inputEle.setAttribute('min', '0');
+    }
+    // condition to remove MB span
+    if (i ==  2){
+      inputEle.setAttribute('value', inputVal.slice(0, inputVal.length-2)); //textContent ignores the HTML char, keep stripping last 2 and assume it'll be re-appended
+    } else{
+      inputEle.setAttribute('value', inputVal);
     }
     const tdEle = document.createElement('td');
     tdEle.appendChild(inputEle);
@@ -323,7 +334,7 @@ function cancelEdit(torrentArchive){
 }
 
 
-function saveEdit(e){ // reduce duplicate code between delete, cancel functions
+function saveEdit(e){
   // should refactor to modify existing row instead
   const finalInputs = e.target.parentNode.parentNode;
   const row = document.createElement('tr');
@@ -349,9 +360,7 @@ function saveEdit(e){ // reduce duplicate code between delete, cancel functions
   options.appendChild(editBtn);
   options.appendChild(deleteBtn);
   row.appendChild(options);
-  finalInputs.replaceWith(row);
-  
-  // TODO: input is being validated but Save bypasses (not 'submitting')
+  finalInputs.replaceWith(row); // TODO: input is being validated but replaceWith doesn't submit
 
   // refactor and use cancelEdit(), enableEdit > allowSingleEdit
 }
@@ -388,11 +397,11 @@ document.getElementById('json-test').addEventListener('click', () =>{
 
   for (i, j; i < 10; ++i, ++j){
     const temp = {
-                  name: `torrent-${Math.floor(Math.random()*20)}`,
-                  uri: `example-${Math.floor(Math.random()*20)}.torrents.com`,
-                  size: `${Math.floor(Math.random()*20)}`,
-                  seeders: `${Math.floor(Math.random()*20)}`,
-                  leechers: `${Math.floor(Math.random()*20)}`
+                  name: `torrent-${Math.floor(Math.random()*101)}`,
+                  uri: `example-${Math.floor(Math.random()*101)}.torrents.com`,
+                  size: `${Math.ceil(Math.random()*99)}`,
+                  seeders: `${Math.floor(Math.random()*101)}`,
+                  leechers: `${Math.floor(Math.random()*101)}`
     };
     dynamicTorrents.push(temp);
   }
