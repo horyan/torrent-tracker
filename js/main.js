@@ -1,6 +1,25 @@
 loadSortIcons();
+const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
+
+function getRandomUser(){
+  // property specifies function to execute every time object status changes
+  xhr.onreadystatechange = () =>{
+    // request finished and response is ready, status OK
+    if (xhr.readyState === 4 && xhr.status === 200){
+      const datas = JSON.parse(xhr.responseText).results; // response as array
+      for (let i = 0; i < datas.length; ++i){
+       console.log(datas[i].name.first);
+      }
+    }
+  }
+  // specify request (GET/POST, URL)
+  xhr.open("GET", "https://randomuser.me/api/?results=10");
+  // send GET request to server
+  xhr.send();
+}
+
 
 function getFormInput(selector){
   const torrentInputs = document.querySelectorAll(`#${selector}`);
