@@ -18,7 +18,6 @@ function getFormInput(selector){
 
 function enableInputs(){
   const inputs = document.querySelectorAll('#torrent-input input');
-  console.log(inputs.length);
   for (let i = 0; i < inputs.length; ++i){
     inputs[i].removeAttribute('disabled');
   }
@@ -312,25 +311,38 @@ function enableEdit(e){
         break;
       case 1:
         inputEle.setAttribute('type','text');
-        inputEle.setAttribute('pattern', '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'); // is regex working?
+        inputEle.setAttribute('pattern', '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})');
         break;
       case 2:
-        inputEle.setAttribute('type', 'number'); // TODO: enforce additional input[type="number"] validation
+        inputEle.setAttribute('type', 'number');
         inputEle.setAttribute('min', '1');
         break;
       default:
-        inputEle.setAttribute('type','number'); // TODO: enforce additional input[type="number"] validation
+        inputEle.setAttribute('type','number');
         inputEle.setAttribute('min', '0');
     }
     // condition to remove MB span
     if (i ==  2){
-      inputEle.value = inputVal.slice(0, inputVal.length-2); //textContent ignores the HTML char, keep stripping last 2 and assume it'll be re-appended
+      inputEle.value = inputVal.slice(0, inputVal.length-2); //textContent ignores the HTML char
     } else{
       inputEle.value = inputVal;
     }
     const tdEle = document.createElement('td');
     tdEle.appendChild(inputEle);
     e.target.parentNode.parentNode.children[i].replaceWith(tdEle);
+  }
+}
+
+
+function checkNumInputs(){ // TODO: call in submit handler's else condition
+  const numInputs = document.querySelectorAll('input[type="number"]');
+  // prevent submitting numbers that start with consecutive zero digits
+  for (let i = 0; i < numInputs.length; ++i){
+    const temp = numInputs[i].value.toString(); // how to handle <empty string> 
+    // allow if single 0 is the only character
+    // otherwise handle portion of string matching regex: ^0+
+    // by removing or blocking submit
+    // MAGIC GOES HERE
   }
 }
 
