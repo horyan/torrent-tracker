@@ -121,4 +121,5 @@ button {
   border-radius: .375rem;
   padding: 0 .5rem;
   border: 0;
+  cursor: pointer;
 }
