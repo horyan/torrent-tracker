@@ -16,6 +16,15 @@ function getFormInput(selector){
 }
 
 
+function enableInputs(){
+  const inputs = document.querySelectorAll('#torrent-input input');
+  console.log(inputs.length);
+  for (let i = 0; i < inputs.length; ++i){
+    inputs[i].removeAttribute('disabled');
+  }
+}
+
+
 function resetIcons(column, target){
   for (let i = 0; i < 5; ++i){
     if (i === column){
@@ -64,7 +73,7 @@ function populateTable(torrents){
 
 function constructRowTemplate(torrent, index){
   const tr = document.createElement('tr');
-  tr.setAttribute('id', `row-${index}`);
+  tr.id = `row-${index}`;
 
   // convert into array of torrent's values (iterable, has length)
   const torrentValues = Object.values(torrent);
@@ -113,8 +122,8 @@ function sortInitial(){
     rows = document.getElementById('torrent-data').children;
     for (i = 0; i < rows.length-1; ++i){
       shouldSwitch = false;
-      x = rows[i].getAttribute('id');
-      y = rows[i+1].getAttribute('id');
+      x = rows[i].id;
+      y = rows[i+1].id;
       if (Number(x.slice(4)) > Number(y.slice(4))){ // exclude 'row-' prepend
         shouldSwitch = true;
         break;
@@ -264,8 +273,8 @@ function enableEdit(e){
   // store values of the row that clicked edit
   const initialInputs = e.target.parentNode.parentNode;
   const row = document.createElement('tr');
-  const id = initialInputs.getAttribute('id');
-  row.setAttribute('id', id);
+  const id = initialInputs.id;
+  row.id = id;
   for (let i = 0; i < initialInputs.childElementCount; ++i){
     const temp = document.createElement('td');
     temp.innerHTML = initialInputs.children[i].innerHTML; // maybe textContent until last td?
@@ -274,6 +283,7 @@ function enableEdit(e){
 
   e.target.parentNode.parentNode.classList.add('edit-mode'); // set indicator
   e.target.textContent = 'Save'; // remap edit to save
+  e.target.id = 'save-btn'; // add id for submission condition
   e.target.removeEventListener('click', enableEdit);
   e.target.addEventListener('click', saveEdit);
 
@@ -286,6 +296,11 @@ function enableEdit(e){
   
   e.target.parentNode.insertBefore(cancel, e.target); // insert cancel before save button
   
+  // disableInputs() disable tfoot inputs before transforming row
+  const inputs = document.querySelectorAll('#torrent-input input');
+  for (let i = 0; i < inputs.length; ++i){
+    inputs[i].setAttribute('disabled','');
+  }
   // transform row tds into inputs
   for (let i = 0; i < 5; ++i){
     const inputVal = e.target.parentNode.parentNode.children[i].textContent;
@@ -309,9 +324,9 @@ function enableEdit(e){
     }
     // condition to remove MB span
     if (i ==  2){
-      inputEle.setAttribute('value', inputVal.slice(0, inputVal.length-2)); //textContent ignores the HTML char, keep stripping last 2 and assume it'll be re-appended
+      inputEle.value = inputVal.slice(0, inputVal.length-2); //textContent ignores the HTML char, keep stripping last 2 and assume it'll be re-appended
     } else{
-      inputEle.setAttribute('value', inputVal);
+      inputEle.value = inputVal;
     }
     const tdEle = document.createElement('td');
     tdEle.appendChild(inputEle);
@@ -322,7 +337,7 @@ function enableEdit(e){
 
 function cancelEdit(torrentArchive){
   // prepare replacement row
-  const id = torrentArchive.getAttribute('id');
+  const id = torrentArchive.id;
   const initialRow = document.getElementById(id);
   initialRow.classList.remove('edit-mode');
 
@@ -331,38 +346,13 @@ function cancelEdit(torrentArchive){
   // breaks without re-add (why?)
   torrentArchive.children[torrentArchive.children.length-1].lastElementChild.addEventListener('click', deleteRow);
   initialRow.replaceWith(torrentArchive);
+  // re-enable tfoot inputs
+  enableInputs();
 }
 
 
 function saveEdit(e){
-  // should refactor to modify existing row instead
-  const finalInputs = e.target.parentNode.parentNode;
-  const row = document.createElement('tr');
-  const id = finalInputs.getAttribute('id');
-  row.setAttribute('id', id);
-
-  for (let i = 0; i < finalInputs.childElementCount-1; ++i){
-    const temp = document.createElement('td');
-    temp.textContent = finalInputs.children[i].children[0].value;
-    row.appendChild(temp);
-  }
-
-  // make buttons
-  const options = document.createElement('td');
-  const editBtn = document.createElement('button');
-  editBtn.textContent = 'Edit';
-  editBtn.setAttribute('type', 'button');
-  editBtn.addEventListener('click', enableEdit);
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Delete';
-  deleteBtn.setAttribute('type', 'button');
-  deleteBtn.addEventListener('click', deleteRow);
-  options.appendChild(editBtn);
-  options.appendChild(deleteBtn);
-  row.appendChild(options);
-  finalInputs.replaceWith(row); // TODO: input is being validated but replaceWith doesn't submit
-
-  // refactor and use cancelEdit(), enableEdit > allowSingleEdit
+  e.target.setAttribute('type','submit'); // set outside of enableEdit to avoid submit on edit
 }
 
 /* Operators */
@@ -371,11 +361,41 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   e.preventDefault();
 
   // if submitter is add-btn
-  if (e.submitter.getAttribute('id') === 'add-btn'){
-    populateTable(getFormInput('#torrent-input input'));
+  if (e.submitter.id === 'add-btn'){
+    populateTable(getFormInput('torrent-input input'));
     document.getElementById('clear-btn').click(); // clear inputs
-  } else {
-    //below didn't enforce validate on "Save"
+  } else {// submit conditional whether to append row on add, or construct and replace row on SAVE)
+    const finalInputs = document.getElementById(e.submitter.id).parentNode.parentNode;
+    const row = document.createElement('tr');
+    const id = finalInputs.id;
+    row.id = id;
+
+    for (let i = 0; i < finalInputs.childElementCount-1; ++i){
+      const temp = document.createElement('td');
+      temp.textContent = finalInputs.children[i].children[0].value;
+      if (i == 2){
+        temp.innerHTML += '<span>MB</span>';
+      }
+      row.appendChild(temp);
+    }
+
+    // make buttons
+    const options = document.createElement('td');
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.setAttribute('type', 'button');
+    editBtn.addEventListener('click', enableEdit);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.setAttribute('type', 'button');
+    deleteBtn.addEventListener('click', deleteRow);
+    options.appendChild(editBtn);
+    options.appendChild(deleteBtn);
+    row.appendChild(options);
+    finalInputs.replaceWith(row); // separate {else} into saveRow function?
+    // re-enable tfoot inputs
+    enableInputs();
+    // does edit need id?
   }
 });
 
@@ -398,7 +418,7 @@ document.getElementById('json-test').addEventListener('click', () =>{
   for (i, j; i < 10; ++i, ++j){
     const temp = {
                   name: `torrent-${Math.floor(Math.random()*101)}`,
-                  uri: `example-${Math.floor(Math.random()*101)}.torrents.com`,
+                  uri: `http://xmpl.co/${Math.floor(Math.random()*101)}`,
                   size: `${Math.ceil(Math.random()*99)}`,
                   seeders: `${Math.floor(Math.random()*101)}`,
                   leechers: `${Math.floor(Math.random()*101)}`
