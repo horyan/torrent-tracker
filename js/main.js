@@ -1,7 +1,16 @@
+const myStorage = window.localStorage;
+window.addEventListener('load', restoreTheme); // restore dark theme onload
 loadSortIcons();
 const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
+
+function restoreTheme(){
+  if (myStorage.getItem('theme')==='dark'){
+    document.getElementById('theme-btn').click();
+  }
+}
+
 
 function populateData(){
   // property specifies function to execute every time object status changes
@@ -451,9 +460,13 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
 // toggle color theme
 document.getElementById('theme-btn').addEventListener('click', () =>{
   if (document.body.classList.toggle('dark') === true){
-    this.textContent = 'Light Mode';
+    document.getElementById('theme-btn').textContent = 'Light Mode';
+    // set storage
+    myStorage.setItem('theme', 'dark');
   } else{
-    this.textContent = 'Dark Mode';
+    document.getElementById('theme-btn').textContent = 'Dark Mode';
+    // clear storage
+    myStorage.clear();
   }
 });
 
