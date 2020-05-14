@@ -137,7 +137,10 @@ function constructRowTemplate(torrent, index){
 function deleteRow(e){
   const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
-  enableInputs(); // renable tfoot inputs
+  if (userRow.classList.contains('edit-mode')){
+    console.log('EDIT-DELETE');
+    enableInputs(); // renable tfoot inputs if delete while in edit
+  }
 }
 
 
