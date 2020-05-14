@@ -149,6 +149,8 @@ function deleteRow(e){
   if (userRow.classList.contains('edit-mode')){
     console.log('EDIT-DELETE');
     enableInputs(); // renable tfoot inputs if delete while in edit
+    // re-enable sorts
+    enableSorts();
   }
 }
 
@@ -303,7 +305,25 @@ function sortDesc(e){
 }
 
 
+function disableSorts(){
+  const sortBtns = document.querySelectorAll('th button');
+  for (let i = 0; i < sortBtns.length; ++i){
+    sortBtns[i].setAttribute('disabled', '');
+  }
+}
+
+
+function enableSorts(){
+  const sortBtns = document.querySelectorAll('th button');
+  for (let i = 0; i < sortBtns.length; ++i){
+    sortBtns[i].removeAttribute('disabled');
+  }
+}
+
+
 function enableEdit(e){
+  // disable sorting buttons
+  disableSorts();
   // cancel any other rows in edit mode
   if (document.getElementsByClassName('edit-mode')[0] != undefined && document.getElementsByClassName('edit-mode')[0].childElementCount === 6){
     const editRow = document.getElementsByClassName('edit-mode')[0];
@@ -405,6 +425,8 @@ function cancelEdit(torrentArchive){
   initialRow.replaceWith(torrentArchive);
   // re-enable tfoot inputs
   enableInputs();
+  // re-enable sort
+  enableSorts();
 }
 
 
@@ -453,6 +475,8 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
     // re-enable tfoot inputs
     enableInputs();
     // does edit need id?
+    // re-enable sorts
+    enableSorts();
   }
 });
 
