@@ -381,13 +381,13 @@ function enableEdit(e){
 
 function checkNumInputs(){ // TODO: call in submit handler's else condition
   const numInputs = document.querySelectorAll('input[type="number"]');
-  // prevent submitting numbers that start with consecutive zero digits
-  for (let i = 0; i < numInputs.length; ++i){
-    const temp = numInputs[i].value.toString(); // how to handle <empty string> 
-    // allow if single 0 is the only character
-    // otherwise handle portion of string matching regex: ^0+
-    // by removing or blocking submit
-    // MAGIC GOES HERE
+  // strip leading zeros but leave 1 if consecutive zeros
+  for (let i = 0; i < numInputs.length; ++i){  
+    if (numInputs[i].value.replace(/^0+/, '') === ''){
+      numInputs[i].value = 0;
+    } else {
+      numInputs[i].value = numInputs[i].value.replace(/^0+/, '');
+    }
   }
 }
 
@@ -416,7 +416,7 @@ function saveEdit(e){
 
 document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   e.preventDefault();
-
+  checkNumInputs();
   // if submitter is add-btn
   if (e.submitter.id === 'add-btn'){
     populateTable(getFormInput('torrent-input input'));
