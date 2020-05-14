@@ -3,15 +3,24 @@ const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
 
-function getRandomUser(){
+function populateData(){
   // property specifies function to execute every time object status changes
   xhr.onreadystatechange = () =>{
+    const randomUsers = [];
     // request finished and response is ready, status OK
     if (xhr.readyState === 4 && xhr.status === 200){
       const datas = JSON.parse(xhr.responseText).results; // response as array
       for (let i = 0; i < datas.length; ++i){
-       console.log(datas[i].name.first);
+        const temp = {
+          name: `${datas[i].name.first}`,
+          uri: `${datas[i].picture.large}`,
+          size: `${datas[i].location.street.number}`,
+          seeders: `${datas[i].dob.age}`,
+          leechers: `${datas[i].registered.age}`
+        };
+        randomUsers.push(temp);
       }
+    populateTable(randomUsers);
     }
   }
   // specify request (GET/POST, URL)
@@ -128,6 +137,7 @@ function constructRowTemplate(torrent, index){
 function deleteRow(e){
   const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
+  enableInputs(); // renable tfoot inputs
 }
 
 
@@ -327,18 +337,22 @@ function enableEdit(e){
     switch(i){
       case 0:
         inputEle.setAttribute('type','text');
+        inputEle.setAttribute('required','');
         break;
       case 1:
         inputEle.setAttribute('type','text');
-        inputEle.setAttribute('pattern', '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})');
+        inputEle.setAttribute('pattern', '(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})'); // need double escape char
+        inputEle.setAttribute('required','');
         break;
       case 2:
         inputEle.setAttribute('type', 'number');
         inputEle.setAttribute('min', '1');
+        inputEle.setAttribute('required','');
         break;
       default:
         inputEle.setAttribute('type','number');
         inputEle.setAttribute('min', '0');
+        inputEle.setAttribute('required','');
     }
     // condition to remove MB span
     if (i ==  2){
@@ -443,19 +457,5 @@ document.getElementById('theme-btn').addEventListener('click', () =>{
 
 // TEST FEATURE: add 10 rows from sample JSON
 document.getElementById('json-test').addEventListener('click', () =>{
-  const dynamicTorrents = [];
-  let i =  0, j = document.getElementsByTagName('tr').length-1; // existing rows in tbody
-
-  for (i, j; i < 10; ++i, ++j){
-    const temp = {
-                  name: `torrent-${Math.floor(Math.random()*101)}`,
-                  uri: `http://xmpl.co/${Math.floor(Math.random()*101)}`,
-                  size: `${Math.ceil(Math.random()*99)}`,
-                  seeders: `${Math.floor(Math.random()*101)}`,
-                  leechers: `${Math.floor(Math.random()*101)}`
-    };
-    dynamicTorrents.push(temp);
-  }
-
-  populateTable(dynamicTorrents);
+  populateData();
 });
