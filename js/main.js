@@ -135,16 +135,15 @@ function constructRowTemplate(torrent, index){
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
     const td = document.createElement('td');
-    // condition for span insertion
+    // condition for span and tooltip insertion
     if (i == 2){
       td.innerHTML = `${torrentValues[i]}<span>MB</span>`;
+      td.setAttribute('title', `${torrentValues[i]}MB`);
     } else {
       td.textContent = torrentValues[i];
-    }
-    // TODO: add tooltip and clipboard if ellipsis
+      // TODO: column clipboard and tooltips if ellipsis
       td.setAttribute('title', torrentValues[i]);
-      // TODO: allow clipboard copy
-      //
+    }
     tr.appendChild(td);
   }
 
