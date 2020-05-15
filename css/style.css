@@ -142,3 +142,8 @@ input[type=number] {
 input:disabled, button:disabled{
   cursor: not-allowed; 
 }
+
+th {
+  position: sticky;
+  top: 0;
+}
