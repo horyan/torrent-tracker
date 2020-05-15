@@ -12,11 +12,9 @@ function restoreTheme(){
 
 
 function populateData(){
-  // property specifies function to execute every time object status changes
-  xhr.onreadystatechange = () =>{
+  xhr.onreadystatechange = () =>{ // execute function on status changes
     const randomUsers = [];
-    // request finished and response is ready, status OK
-    if (xhr.readyState === 4 && xhr.status === 200){
+    if (xhr.readyState === 4 && xhr.status === 200){ // response, status OK
       const datas = JSON.parse(xhr.responseText).results; // response as array
       for (let i = 0; i < datas.length; ++i){
         const temp = {
@@ -29,16 +27,15 @@ function populateData(){
         randomUsers.push(temp);
       }
       populateTable(randomUsers);
-      // load icon display and functionality if more than 1 tbody row
-      if (document.querySelectorAll('#torrent-data tr').length > 0){
-        loadIconClosure();
+      // just load icon display and functionality at exactly 10 tbody rows
+      // length aligns unlike other loadIcon circumstances
+      if (document.querySelectorAll('#torrent-data tr').length === 10){
+        loadIcon();
       }
     }
   }
-  // specify request (GET/POST, URL)
   xhr.open("GET", "https://randomuser.me/api/?results=10");
-  // send GET request to server
-  xhr.send();
+  xhr.send(); // send GET request
 }
 
 
@@ -100,34 +97,26 @@ function addIconListeners(){
 }
 
 
-// only load once
-const loadIconClosure = (function(){
-  let executed = false;
-  return function(){
-    if (!executed){
-      executed = true;
-      // display icons with id assignments for addIconListeners
-      const ids = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
-      const ths = document.querySelectorAll('th');
-      const labels = document.querySelectorAll('label');
-      for (let i = 0; i < labels.length; ++i){
-        const sortBtn = document.createElement('button');
-        sortBtn.id = ids[i];
-        sortBtn.setAttribute('type', 'button');
-        sortBtn.innerHTML = '&laquo;';
-        ths[i].insertBefore(sortBtn, labels[i].nextSibling); // no native insertAfter
-      }
-      addIconListeners();
-    }
-  };
-})();
+function loadIcon(){
+  // display icons with id assignments for addIconListeners
+  const ids = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
+  const ths = document.querySelectorAll('th');
+  const labels = document.querySelectorAll('label');
+  for (let i = 0; i < labels.length; ++i){
+    const sortBtn = document.createElement('button');
+    sortBtn.id = ids[i];
+    sortBtn.setAttribute('type', 'button');
+    sortBtn.innerHTML = '&laquo;';
+    ths[i].insertBefore(sortBtn, labels[i].nextSibling); // insertAfter
+  }
+  addIconListeners();
+}
 
 
 function populateTable(torrents){
-  console.log(document.querySelectorAll('#torrent-data tr').length);
-  // load icon display and functionality if more than 1 tbody row
-  if (document.querySelectorAll('#torrent-data tr').length > 0){
-    loadIconClosure();
+  // load icon display and functionality at exactly 2 tbody rows
+  if (document.querySelectorAll('#torrent-data tr').length === 1){
+    loadIcon();
   }
   const tableBody = document.getElementById('torrent-data');
   let i = 0, j = document.getElementsByTagName('tr').length-1; // existing rows in tbody
@@ -174,14 +163,25 @@ function constructRowTemplate(torrent, index){
 }
 
 
-// TODO: remove sorts if <= 1 row
 function deleteRow(e){
   const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
   if (userRow.classList.contains('edit-mode')){
     enableInputs(); // renable tfoot inputs if delete while in edit
-    // re-enable sorts
-    enableSorts();
+    enableSorts(); // remove disabled attr
+  }
+  // remove sort icons if num rows fall below 2
+  if (document.querySelectorAll('#torrent-data tr').length < 2){
+    removeSorts();
+  }
+}
+
+
+function removeSorts(){
+  const ths = document.querySelectorAll('th');
+  const sortBtns = document.querySelectorAll('th button');
+  for (let i = 0; i < sortBtns.length; ++i){
+    ths[i].removeChild(sortBtns[i]);
   }
 }
 
@@ -353,8 +353,7 @@ function enableSorts(){
 
 
 function enableEdit(e){
-  // disable sorting buttons
-  disableSorts();
+  disableSorts(); // disable sorting buttons
   // cancel any other rows in edit mode
   if (document.getElementsByClassName('edit-mode')[0] != undefined && document.getElementsByClassName('edit-mode')[0].childElementCount === 6){
     const editRow = document.getElementsByClassName('edit-mode')[0];
@@ -418,8 +417,8 @@ function enableEdit(e){
         inputEle.setAttribute('required','');
     }
     // condition to remove MB span
-    if (i ==  2){
-      inputEle.value = inputVal.slice(0, inputVal.length-2); //textContent ignores the HTML char
+    if (i ==  2){ // size column
+      inputEle.value = inputVal.slice(0, inputVal.length-2); // exclude span
     } else{
       inputEle.value = inputVal;
     }
@@ -430,9 +429,9 @@ function enableEdit(e){
 }
 
 
-function checkNumInputs(){ // TODO: call in submit handler's else condition
+function checkNumInputs(){
   const numInputs = document.querySelectorAll('input[type="number"]');
-  // strip leading zeros but leave 1 if consecutive zeros
+  // strip leading zeros but leave 1 if all zeros
   for (let i = 0; i < numInputs.length; ++i){  
     if (numInputs[i].value.replace(/^0+/, '') === ''){
       numInputs[i].value = 0;
@@ -462,7 +461,7 @@ function cancelEdit(torrentArchive){
 
 
 function saveEdit(e){
-  e.target.setAttribute('type','submit'); // set outside of enableEdit to avoid submit on edit
+  e.target.setAttribute('type','submit'); // remap save to submit
 }
 
 /* Operators */
@@ -470,11 +469,11 @@ function saveEdit(e){
 document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   e.preventDefault();
   checkNumInputs();
-  // if submitter is add-btn
+  // append if add-btn
   if (e.submitter.id === 'add-btn'){
     populateTable(getFormInput('torrent-input input'));
     document.getElementById('clear-btn').click(); // clear inputs
-  } else {// submit conditional whether to append row on add, or construct and replace row on SAVE)
+  } else { // construct and replace row if save-btn
     const finalInputs = document.getElementById(e.submitter.id).parentNode.parentNode;
     const row = document.createElement('tr');
     const id = finalInputs.id;
@@ -502,10 +501,9 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
     options.appendChild(editBtn);
     options.appendChild(deleteBtn);
     row.appendChild(options);
-    finalInputs.replaceWith(row); // separate {else} into saveRow function?
+    finalInputs.replaceWith(row);
     // re-enable tfoot inputs
     enableInputs();
-    // does edit need id?
     // re-enable sorts
     enableSorts();
   }
@@ -526,7 +524,7 @@ document.getElementById('theme-btn').addEventListener('click', () =>{
 });
 
 
-// TEST FEATURE: add 10 rows from sample JSON
+// TEST FEATURE: add 10 rows from API call
 document.getElementById('json-test').addEventListener('click', () =>{
   populateData();
 });
