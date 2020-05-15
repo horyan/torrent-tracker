@@ -138,9 +138,13 @@ function constructRowTemplate(torrent, index){
     // condition for span insertion
     if (i == 2){
       td.innerHTML = `${torrentValues[i]}<span>MB</span>`;
-    } else{
-    td.textContent = torrentValues[i];
+    } else {
+      td.textContent = torrentValues[i];
     }
+    // TODO: add tooltip and clipboard if ellipsis
+      td.setAttribute('title', torrentValues[i]);
+      // TODO: allow clipboard copy
+      //
     tr.appendChild(td);
   }
 
