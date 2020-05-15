@@ -8,6 +8,7 @@ input {
   border: none;
   border-bottom: 1px solid #000;
   background-color: #FAF4FF;
+  padding: 0;
 }
 
 .dark input {
@@ -136,4 +137,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
-  }
+}
+
+input:disabled, button:disabled{
+  cursor: not-allowed; 
+}
