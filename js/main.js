@@ -1,6 +1,5 @@
 const myStorage = window.localStorage;
 window.addEventListener('load', restoreTheme); // restore dark theme onload
-loadSortIcons();
 const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
@@ -29,7 +28,11 @@ function populateData(){
         };
         randomUsers.push(temp);
       }
-    populateTable(randomUsers);
+      populateTable(randomUsers);
+      // load icon display and functionality if more than 1 tbody row
+      if (document.querySelectorAll('#torrent-data tr').length > 0){
+        loadIconClosure();
+      }
     }
   }
   // specify request (GET/POST, URL)
@@ -72,7 +75,7 @@ function resetIcons(column, target){
 }
 
 
-function loadSortIcons(){
+function addIconListeners(){
   // add event handlers to sort buttons
   const sortBtns = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
   for (let i = 0; i < sortBtns.length; ++i){
@@ -97,7 +100,35 @@ function loadSortIcons(){
 }
 
 
+// only load once
+const loadIconClosure = (function(){
+  let executed = false;
+  return function(){
+    if (!executed){
+      executed = true;
+      // display icons with id assignments for addIconListeners
+      const ids = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
+      const ths = document.querySelectorAll('th');
+      const labels = document.querySelectorAll('label');
+      for (let i = 0; i < labels.length; ++i){
+        const sortBtn = document.createElement('button');
+        sortBtn.id = ids[i];
+        sortBtn.setAttribute('type', 'button');
+        sortBtn.innerHTML = '&laquo;';
+        ths[i].insertBefore(sortBtn, labels[i].nextSibling); // no native insertAfter
+      }
+      addIconListeners();
+    }
+  };
+})();
+
+
 function populateTable(torrents){
+  console.log(document.querySelectorAll('#torrent-data tr').length);
+  // load icon display and functionality if more than 1 tbody row
+  if (document.querySelectorAll('#torrent-data tr').length > 0){
+    loadIconClosure();
+  }
   const tableBody = document.getElementById('torrent-data');
   let i = 0, j = document.getElementsByTagName('tr').length-1; // existing rows in tbody
   for (i, j; i < torrents.length; ++i, ++j){
@@ -143,11 +174,11 @@ function constructRowTemplate(torrent, index){
 }
 
 
+// TODO: remove sorts if <= 1 row
 function deleteRow(e){
   const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
   if (userRow.classList.contains('edit-mode')){
-    console.log('EDIT-DELETE');
     enableInputs(); // renable tfoot inputs if delete while in edit
     // re-enable sorts
     enableSorts();
