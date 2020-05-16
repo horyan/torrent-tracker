@@ -71,9 +71,23 @@ td {
 
 tbody td:not(:last-child) {
   background-color: #D4EBD0;
+}
+
+div {
+  display: flex;
+  justify-content: space-between;
+}
+
+p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+div button {
+  padding: 0;
+  height: min-content;
+  /* TODO: align vertical center */
 }
 
 .dark tbody td:last-child {

@@ -137,10 +137,10 @@ function constructRowTemplate(torrent, index){
     const td = document.createElement('td');
     // condition for span and tooltip insertion
     if (i == 2){
-      td.innerHTML = `${torrentValues[i]}<span>MB</span>`;
+      td.innerHTML = `<div><p>${torrentValues[i]}MB</p><button type="button">&#128203;</button></div>`;
       td.setAttribute('title', `${torrentValues[i]}MB`);
     } else {
-      td.textContent = torrentValues[i];
+      td.innerHTML = `<div><p>${torrentValues[i]}</p><button type="button">&#128203;</button></div>`;
       // TODO: column clipboard and tooltips if ellipsis
       td.setAttribute('title', torrentValues[i]);
     }
@@ -226,7 +226,8 @@ function sortAsc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+        // exclude button text
+        if (x.textContent.slice(0, -1).toLowerCase() > y.textContent.slice(0, -1).toLowerCase()){
           shouldSwitch = true;
           break;
         }
@@ -244,7 +245,8 @@ function sortAsc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML.slice(0, x.innerHTML.length-15)) > Number(y.innerHTML.slice(0, y.innerHTML.length-15))){
+        // exclude button text
+        if (Number(x.textContent.slice(0, -4)) > Number(y.textContent.slice(0, -4))){
           shouldSwitch = true;
           break;
         }
@@ -262,7 +264,8 @@ function sortAsc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML) > Number(y.innerHTML)){
+        // exclude button text
+        if (Number(x.textContent.slice(0, -2)) > Number(y.textContent.slice(0, -2))){
           shouldSwitch = true;
           break;
         }
@@ -289,7 +292,8 @@ function sortDesc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+        // exclude button text
+        if (x.textContent.slice(0, -2).toLowerCase() < y.textContent.slice(0, -2).toLowerCase()){
           shouldSwitch = true;
           break;
         }
@@ -307,7 +311,8 @@ function sortDesc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML.slice(0, x.innerHTML.length-15)) < Number(y.innerHTML.slice(0, y.innerHTML.length-15))){
+        // exclude button text
+        if (Number(x.textContent.slice(0, -4)) < Number(y.textContent.slice(0, -4))){
           shouldSwitch = true;
           break;
         }
@@ -325,7 +330,8 @@ function sortDesc(e){
         shouldSwitch = false;
         x = rows[i].getElementsByTagName('td')[col];
         y = rows[i+1].getElementsByTagName('td')[col];
-        if (Number(x.innerHTML) < Number(y.innerHTML)){
+        // exclude button text
+        if (Number(x.textContent.slice(0, -2)) < Number(y.textContent.slice(0, -2))){
           shouldSwitch = true;
           break;
         }
@@ -356,13 +362,13 @@ function enableSorts(){
 
 
 function enableEdit(e){
-  disableSorts(); // disable sorting buttons
-  // cancel any other rows in edit mode
-  if (document.getElementsByClassName('edit-mode')[0] != undefined && document.getElementsByClassName('edit-mode')[0].childElementCount === 6){
+  // cancel previous edit mode if exists
+  if (document.getElementsByClassName('edit-mode')[0] !== undefined){
     const editRow = document.getElementsByClassName('edit-mode')[0];
+    //TODO: call special cancel function that doesn't re-enable sorts
     editRow.childNodes[editRow.childElementCount-1].firstElementChild.click();
   }
-
+  disableSorts(); // AFTER cancelEdit re-enables
   // store values of the row that clicked edit
   const initialInputs = e.target.parentNode.parentNode;
   const row = document.createElement('tr');
@@ -371,6 +377,7 @@ function enableEdit(e){
   for (let i = 0; i < initialInputs.childElementCount; ++i){
     const temp = document.createElement('td');
     temp.innerHTML = initialInputs.children[i].innerHTML; // maybe textContent until last td?
+    temp.setAttribute('title', temp.textContent.slice(0, -2)); // maintain tooltip without button text
     row.appendChild(temp);
   }
 
@@ -421,19 +428,25 @@ function enableEdit(e){
     }
     // condition to remove MB span
     if (i ==  2){ // size column
-      inputEle.value = inputVal.slice(0, inputVal.length-2); // exclude span
+      inputEle.value = inputVal.slice(0, -4); // exclude button text
     } else{
-      inputEle.value = inputVal;
+      inputEle.value = inputVal.slice(0, -2); // exclude button text
     }
+    const divEle = document.createElement('div');
+    const pEle = document.createElement('p');
     const tdEle = document.createElement('td');
-    tdEle.appendChild(inputEle);
+    pEle.appendChild(inputEle);
+    divEle.appendChild(pEle);
+    tdEle.appendChild(divEle);
+
     e.target.parentNode.parentNode.children[i].replaceWith(tdEle);
   }
 }
 
 
 function checkNumInputs(){
-  const numInputs = document.querySelectorAll('input[type="number"]');
+  // exclude tfoot input to avoid empty fields misfire
+  const numInputs = document.querySelectorAll('tbody input[type="number"]');
   // strip leading zeros but leave 1 if all zeros
   for (let i = 0; i < numInputs.length; ++i){  
     if (numInputs[i].value.replace(/^0+/, '') === ''){
@@ -483,12 +496,21 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
     row.id = id;
 
     for (let i = 0; i < finalInputs.childElementCount-1; ++i){
-      const temp = document.createElement('td');
-      temp.textContent = finalInputs.children[i].children[0].value;
+      const td = document.createElement('td');
+      const div = document.createElement('div');
+      const p = document.createElement('p');
+      p.textContent = finalInputs.children[i].children[0].children[0].children[0].value;
       if (i == 2){
-        temp.innerHTML += '<span>MB</span>';
+        p.textContent += 'MB';
       }
-      row.appendChild(temp);
+      div.appendChild(p);
+      const clipboard = document.createElement('button');
+      clipboard.innerHTML = '&#128203;';
+      clipboard.setAttribute('type','button');
+      div.appendChild(clipboard);
+      td.appendChild(div);
+      td.setAttribute('title', p.textContent);
+      row.appendChild(td);
     }
 
     // make buttons
