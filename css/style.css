@@ -1,3 +1,9 @@
+*, *::before, *::after{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 tbody input {
   background-color: #D4EBD0;
 }
@@ -86,8 +92,6 @@ p {
 
 div button {
   padding: 0;
-  height: min-content;
-  /* TODO: align vertical center */
 }
 
 .dark tbody td:last-child {
