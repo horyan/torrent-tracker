@@ -67,8 +67,11 @@ th, td {
 }
 
 td {
-  text-align: center;
   background-color: #FAF4FF; 
+}
+
+td:last-child {
+  text-align: center;
 }
 
 .dark tbody td:not(:last-child){

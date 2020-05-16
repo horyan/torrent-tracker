@@ -39,6 +39,30 @@ function populateData(){
 }
 
 
+function copyContent(e){
+  // w3+stack as starting point
+  const content = e.target.previousSibling.textContent;
+
+  // copy to clipboard without input element
+  const temp = document.createElement("input"); // hidden dummy
+  temp.value = content;
+  
+  temp.setAttribute('readonly', ''); // tamper-proof
+  temp.style.position = 'absolute';
+  temp.style.left = '-9999px'; // move outside screen (invisible)
+  
+  document.body.appendChild(temp);
+  temp.focus();
+  temp.select();
+  temp.setSelectionRange(0, 99999); // mobile
+
+  document.execCommand('copy');
+  alert(`Copied: ${content}`); // alert
+
+  document.body.removeChild(temp); // remove after copy
+}
+
+
 function getFormInput(selector){
   const torrentInputs = document.querySelectorAll(`#${selector}`);
   const torrent = [{}];
@@ -134,16 +158,24 @@ function constructRowTemplate(torrent, index){
   // convert into array of torrent's values (iterable, has length)
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
+    // TODO: make reusable function for cancel/save
+    // TODO: tooltip/clipboard if overflow
     const td = document.createElement('td');
-    // condition for span and tooltip insertion
+    const div = document.createElement('div');
+    const p = document.createElement('p');
     if (i == 2){
-      td.innerHTML = `<div><p>${torrentValues[i]}MB</p><button type="button">&#128203;</button></div>`;
-      td.setAttribute('title', `${torrentValues[i]}MB`);
-    } else {
-      td.innerHTML = `<div><p>${torrentValues[i]}</p><button type="button">&#128203;</button></div>`;
-      // TODO: column clipboard and tooltips if ellipsis
-      td.setAttribute('title', torrentValues[i]);
+      p.textContent = `${torrentValues[i]}MB`; // MB handling
+    } else{
+      p.textContent = torrentValues[i];
     }
+    div.appendChild(p);
+    const clipboard = document.createElement('button');
+    clipboard.innerHTML = '&#128203;';
+    clipboard.setAttribute('type', 'button');
+    clipboard.addEventListener('click', copyContent);
+    div.appendChild(clipboard);
+    td.appendChild(div);
+    td.setAttribute('title', p.textContent);
     tr.appendChild(td);
   }
 
