@@ -4,6 +4,19 @@ const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
 
+function toggleTheme(){
+  if (document.body.classList.toggle('dark') === true){
+    document.getElementById('theme-btn').textContent = 'Light Mode';
+    // set storage
+    myStorage.setItem('theme', 'dark');
+  } else{
+    document.getElementById('theme-btn').textContent = 'Dark Mode';
+    // clear storage
+    myStorage.clear();
+  }
+}
+
+
 function restoreTheme(){
   if (myStorage.getItem('theme')==='dark'){
     document.getElementById('theme-btn').click();
@@ -11,24 +24,21 @@ function restoreTheme(){
 }
 
 
-function populateData(){
+function populateRandom(){
   xhr.onreadystatechange = () =>{ // execute function on status changes
     const randomUsers = [];
     if (xhr.readyState === 4 && xhr.status === 200){ // response, status OK
       const datas = JSON.parse(xhr.responseText).results; // response as array
-      for (let i = 0; i < datas.length; ++i){
-        const temp = {
-          name: `${datas[i].name.first}`,
-          uri: `${datas[i].picture.large}`,
-          size: `${datas[i].location.street.number}`,
-          seeders: `${datas[i].dob.age}`,
-          leechers: `${datas[i].registered.age}`
-        };
-        randomUsers.push(temp);
-      }
+      datas.forEach(data =>
+        randomUsers.push({
+          name: data.name.first,
+          uri: data.picture.large,
+          size: data.location.street.number,
+          seeders: data.dob.age,
+          leechers: data.registered.age,
+        }));
       populateTable(randomUsers);
-      // just load icon display and functionality at exactly 10 tbody rows
-      // length aligns unlike other loadIcon circumstances
+      // load icons at exactly 10 tbody rows
       if (document.querySelectorAll('#torrent-data tr').length === 10){
         loadIcon();
       }
@@ -79,9 +89,7 @@ function getFormInput(selector){
 
 function enableInputs(){
   const inputs = document.querySelectorAll('#torrent-input input');
-  for (let i = 0; i < inputs.length; ++i){
-    inputs[i].removeAttribute('disabled');
-  }
+  inputs.forEach(input => input.removeAttribute('disabled'))
 }
 
 
@@ -159,7 +167,6 @@ function constructRowTemplate(torrent, index){
   const torrentValues = Object.values(torrent);
   for (let i = 0; i < torrentValues.length; ++i){
     // TODO: make reusable function for cancel/save
-    // TODO: tooltip/clipboard if overflow
     const td = document.createElement('td');
     const div = document.createElement('div');
     const p = document.createElement('p');
@@ -169,6 +176,7 @@ function constructRowTemplate(torrent, index){
       p.textContent = torrentValues[i];
     }
     div.appendChild(p);
+    // TODO: tooltip/clipboard if overflow
     const clipboard = document.createElement('button');
     clipboard.innerHTML = '&#128203;';
     clipboard.setAttribute('type', 'button');
@@ -567,21 +575,5 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
 });
 
 
-// toggle color theme
-document.getElementById('theme-btn').addEventListener('click', () =>{
-  if (document.body.classList.toggle('dark') === true){
-    document.getElementById('theme-btn').textContent = 'Light Mode';
-    // set storage
-    myStorage.setItem('theme', 'dark');
-  } else{
-    document.getElementById('theme-btn').textContent = 'Dark Mode';
-    // clear storage
-    myStorage.clear();
-  }
-});
-
-
-// TEST FEATURE: add 10 rows from API call
-document.getElementById('json-test').addEventListener('click', () =>{
-  populateData();
-});
+document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+document.getElementById('json-test').addEventListener('click', populateRandom); // add 10 rows
