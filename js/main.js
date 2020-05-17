@@ -1,6 +1,5 @@
 const myStorage = window.localStorage;
 window.addEventListener('load', restoreTheme); // restore dark theme onload
-//const xhr = new XMLHttpRequest(); // create XMLHttpRequest object
 
 /* Declarations */
 
@@ -25,30 +24,6 @@ function restoreTheme(){
 
 
 function populateRandom(){
-  /*// XMLHttpRequest
-  xhr.onreadystatechange = () =>{ // execute function on status changes
-    const randomUsers = [];
-    if (xhr.readyState === 4 && xhr.status === 200){ // response, status OK
-      const datas = JSON.parse(xhr.responseText).results; // response as array
-      datas.forEach(data =>
-        randomUsers.push({
-          name: data.name.first,
-          uri: data.picture.large,
-          size: data.location.street.number,
-          seeders: data.dob.age,
-          leechers: data.registered.age,
-        }));
-      populateTable(randomUsers);
-      // load icons at exactly 10 tbody rows
-      if (document.querySelectorAll('#torrent-data tr').length === 10){
-        loadIcon();
-      }
-    }
-  }
-  xhr.open("GET", "https://randomuser.me/api/?results=10");
-  xhr.send(); // send GET request*/
-
-  // try Fetch API
   const randomUsers = [];
   fetch('https://randomuser.me/api/?results=10')
     .then(response => response.json())
