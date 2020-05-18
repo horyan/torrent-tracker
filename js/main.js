@@ -1,5 +1,4 @@
 const myStorage = window.localStorage;
-window.addEventListener('load', restoreTheme); // restore dark theme onload
 
 /* Declarations */
 
@@ -15,13 +14,11 @@ function toggleTheme(){
   }
 }
 
-
 function restoreTheme(){
   if (myStorage.getItem('theme')==='dark'){
-    document.getElementById('theme-btn').click();
+    toggleTheme();
   }
 }
-
 
 function populateRandom(){
   const randomUsers = [];
@@ -44,7 +41,6 @@ function populateRandom(){
       }
     })
 }
-
 
 function copyContent(e){
   // w3+stack as starting point
@@ -69,7 +65,6 @@ function copyContent(e){
   document.body.removeChild(temp); // remove after copy
 }
 
-
 function getFormInput(selector){
   const torrentInputs = document.querySelectorAll(`#${selector}`);
   const torrent = [{}];
@@ -83,12 +78,10 @@ function getFormInput(selector){
   return torrent;
 }
 
-
 function enableInputs(){
   const inputs = document.querySelectorAll('#torrent-input input');
   inputs.forEach(input => input.removeAttribute('disabled'))
 }
-
 
 function resetIcons(column, target){
   for (let i = 0; i < 5; ++i){
@@ -99,7 +92,6 @@ function resetIcons(column, target){
     }
   }
 }
-
 
 function addIconListeners(){
   // add event handlers to sort buttons
@@ -125,7 +117,6 @@ function addIconListeners(){
   }
 }
 
-
 function loadIcon(){
   // display icons with id assignments for addIconListeners
   const ids = ['name-sort', 'uri-sort', 'size-sort', 'seeders-sort', 'leechers-sort'];
@@ -141,7 +132,6 @@ function loadIcon(){
   addIconListeners();
 }
 
-
 function populateTable(torrents){
   // load icon display and functionality at exactly 2 tbody rows
   if (document.querySelectorAll('#torrent-data tr').length === 1){
@@ -154,7 +144,6 @@ function populateTable(torrents){
     tableBody.appendChild(row); // insert row
   }
 }
-
 
 function constructRowTemplate(torrent, index){
   const tr = document.createElement('tr');
@@ -202,7 +191,6 @@ function constructRowTemplate(torrent, index){
   return tr;
 }
 
-
 function deleteRow(e){
   const userRow = e.target.parentElement.parentElement;
   userRow.remove(userRow);
@@ -216,7 +204,6 @@ function deleteRow(e){
   }
 }
 
-
 function removeSorts(){
   const ths = document.querySelectorAll('th');
   const sortBtns = document.querySelectorAll('th button');
@@ -224,7 +211,6 @@ function removeSorts(){
     ths[i].removeChild(sortBtns[i]);
   }
 }
-
 
 function sortInitial(){
   // w3 example as starting point
@@ -248,7 +234,6 @@ function sortInitial(){
     }
   }
 }
-
 
 function sortAsc(e){
   const col = e.target.parentNode.cellIndex;
@@ -315,7 +300,6 @@ function sortAsc(e){
   }
 }
 
-
 function sortDesc(e){
   const col = e.target.parentNode.cellIndex;
   // w3 example as starting point
@@ -381,7 +365,6 @@ function sortDesc(e){
   }
 }
 
-
 function disableSorts(){
   const sortBtns = document.querySelectorAll('th button');
   for (let i = 0; i < sortBtns.length; ++i){
@@ -389,14 +372,12 @@ function disableSorts(){
   }
 }
 
-
 function enableSorts(){
   const sortBtns = document.querySelectorAll('th button');
   for (let i = 0; i < sortBtns.length; ++i){
     sortBtns[i].removeAttribute('disabled');
   }
 }
-
 
 function enableEdit(e){
   // cancel previous edit mode if exists
@@ -413,7 +394,10 @@ function enableEdit(e){
   row.id = id;
   for (let i = 0; i < initialInputs.childElementCount; ++i){
     const temp = document.createElement('td');
-    temp.innerHTML = initialInputs.children[i].innerHTML; // maybe textContent until last td?
+    temp.innerHTML = initialInputs.children[i].innerHTML;
+    if (i !== 5){ // exclude options column
+      temp.firstElementChild.lastElementChild.addEventListener('click', copyContent);
+    }
     temp.setAttribute('title', temp.textContent.slice(0, -2)); // maintain tooltip without button text
     row.appendChild(temp);
   }
@@ -480,7 +464,6 @@ function enableEdit(e){
   }
 }
 
-
 function checkNumInputs(){
   // exclude tfoot input to avoid empty fields misfire
   const numInputs = document.querySelectorAll('tbody input[type="number"]');
@@ -493,7 +476,6 @@ function checkNumInputs(){
     }
   }
 }
-
 
 function cancelEdit(torrentArchive){
   // prepare replacement row
@@ -512,12 +494,17 @@ function cancelEdit(torrentArchive){
   enableSorts();
 }
 
-
 function saveEdit(e){
   e.target.setAttribute('type','submit'); // remap save to submit
 }
 
 /* Operators */
+
+window.addEventListener('load', restoreTheme); // restore dark theme onload
+
+document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+
+document.getElementById('json-test').addEventListener('click', populateRandom); // add 10 rows
 
 document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   e.preventDefault();
@@ -525,7 +512,7 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
   // append if add-btn
   if (e.submitter.id === 'add-btn'){
     populateTable(getFormInput('torrent-input input'));
-    document.getElementById('clear-btn').click(); // clear inputs
+    document.getElementById('torrent-form').reset();
   } else { // construct and replace row if save-btn
     const finalInputs = document.getElementById(e.submitter.id).parentNode.parentNode;
     const row = document.createElement('tr');
@@ -544,13 +531,14 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
       const clipboard = document.createElement('button');
       clipboard.innerHTML = '&#128203;';
       clipboard.setAttribute('type','button');
+      clipboard.addEventListener('click', copyContent);
       div.appendChild(clipboard);
       td.appendChild(div);
       td.setAttribute('title', p.textContent);
       row.appendChild(td);
     }
 
-    // make buttons
+    // last column buttons
     const options = document.createElement('td');
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Edit';
@@ -562,15 +550,23 @@ document.getElementById('torrent-form').addEventListener('submit', (e)=>{
     deleteBtn.addEventListener('click', deleteRow);
     options.appendChild(editBtn);
     options.appendChild(deleteBtn);
+
     row.appendChild(options);
     finalInputs.replaceWith(row);
-    // re-enable tfoot inputs
-    enableInputs();
-    // re-enable sorts
-    enableSorts();
+    enableInputs(); // re-enable tfoot inputs
+    enableSorts(); // re-enable sorts
   }
 });
 
-
-document.getElementById('theme-btn').addEventListener('click', toggleTheme);
-document.getElementById('json-test').addEventListener('click', populateRandom); // add 10 rows
+/* TODOs:
+ * forEach, for...in
+ * combine opposing functions into single toggle (enable/disable, sortAsc/Dsc)
+ * modify, don't replace, rows on cancel/save
+ *    avoid slow DOM operations
+ * utilize getFormInput within submit handler's else statement
+ * populateTable reusable for row append and modify
+ * spawn/remove save-btn, don't remap edit-btn
+ * aovid DOM crawling with dynamic button ids
+ * disable/re-enable clear/add-btns alongside inputs/sorts
+ * mobile UX
+ * */

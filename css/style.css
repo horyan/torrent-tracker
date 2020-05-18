@@ -141,7 +141,8 @@ table {
 
 button {
   border-radius: .375rem;
-  padding: 0 .5rem;
+  padding: 0 .3rem;
+  margin: .1rem;
   border: 0;
   cursor: pointer;
 }
@@ -172,4 +173,10 @@ th {
 .dark ::placeholder{
   color: #E0E0E0;
   opacity: 1; /* FireFox */
+}
+
+/* target parent containers to
+fix whitespace between buttons */
+nav, td:last-child {
+  font-size: 0;
 }
